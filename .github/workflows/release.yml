@@ -1,0 +1,114 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    name: Create draft release
+    runs-on: ubuntu-latest
+    outputs:
+      release-id: ${{ steps.release.outputs.release-id }}
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Require a tag ref
+        if: github.ref_type != 'tag'
+        run: |
+          echo "::error::This workflow must run on a tag ref."
+          echo "Use: gh workflow run release.yml --ref v0.1.0"
+          exit 1
+
+      - name: Create draft release once
+        id: release
+        run: |
+          lookup() {
+            gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
+              --jq "[.[] | select(.tag_name == \"$GITHUB_REF_NAME\")][0].id"
+          }
+          id=$(lookup)
+          if [ -z "$id" ] || [ "$id" = "null" ]; then
+            gh release create "$GITHUB_REF_NAME" --draft \
+              --title "Henko $GITHUB_REF_NAME" --generate-notes
+            id=$(lookup)
+          fi
+          if [ -z "$id" ] || [ "$id" = "null" ]; then
+            echo "::error::No draft release for $GITHUB_REF_NAME"
+            exit 1
+          fi
+          echo "release-id=$id" >> "$GITHUB_OUTPUT"
+
+  release:
+    name: ${{ matrix.name }}
+    needs: create-release
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            name: macOS Universal
+            targets: aarch64-apple-darwin,x86_64-apple-darwin
+            args: --target universal-apple-darwin --bundles dmg
+          - platform: ubuntu-22.04
+            name: Linux AppImage
+            targets: ''
+            args: --bundles appimage
+          - platform: windows-latest
+            name: Windows NSIS and MSI
+            targets: ''
+            args: --bundles nsis,msi
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 12
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: pnpm
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.targets }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install Linux build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            build-essential \
+            nasm
+
+      - name: Install nasm
+        if: runner.os == 'Windows'
+        run: choco install nasm -y --no-progress
+
+      - name: Install frontend dependencies
+        run: pnpm install --frozen-lockfile
+
+      - uses: tauri-apps/tauri-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          releaseId: ${{ needs.create-release.outputs.release-id }}
+          args: ${{ matrix.args }}

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Henko: offline image crop, resize, compress and convert</title>
+<meta name="description" content="Henko is a desktop app for macOS, Windows and Linux that crops, resizes, compresses and converts images on your own computer.">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Noto+Sans+JP:wght@400;500&family=Noto+Serif+JP:wght@600&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="bar">
+  <a class="mark" href="#top" aria-label="Henko, top of page"><span lang="ja">変更</span> Henko</a>
+  <nav aria-label="Sections">
+    <a href="#compare">Compare</a>
+    <a href="#tools">Tools</a>
+    <a href="#download">Download</a>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="hero" id="top" aria-labelledby="title">
+    <div class="hero-text">
+      <h1 id="title"><span class="kanji" lang="ja">変更</span><span class="caps">Henko</span></h1>
+      <p class="lead">Crop, resize, compress and convert images on your own computer. Nothing is uploaded.</p>
+      <div class="actions">
+        <a class="btn btn-primary" data-release href="releases/latest">Download the latest release</a>
+        <a class="btn btn-ghost" href="#download">Pick your platform</a>
+      </div>
+      <p class="mono muted">macOS · Windows · Linux</p>
+    </div>
+
+    <figure class="compare" id="compare" style="--split: 50%">
+      <div class="frame">
+        <img class="after" src="assets/mountains-q30.webp" width="1600" height="1067" alt="Layered blue mountains in mist, encoded at WebP quality 30" fetchpriority="high">
+        <img class="before" src="assets/mountains-q92.webp" width="1600" height="1067" alt="The same mountains encoded at WebP quality 92" fetchpriority="high">
+        <span class="tag tag-before mono">Original · 72.3 kB</span>
+        <span class="tag tag-after mono">Compressed · 13.1 kB</span>
+        <span class="handle" aria-hidden="true"></span>
+        <label class="sr-only" for="split">Divider position between original and compressed</label>
+        <input id="split" type="range" min="0" max="100" step="1" value="50">
+      </div>
+      <figcaption>
+        <span>Same photo, 1600 × 1067, WebP at quality 92 and 30. Drag the divider or use the arrow keys.</span>
+        <span class="mono saved">82% smaller</span>
+      </figcaption>
+    </figure>
+  </section>
+
+  <section class="tools" id="tools" aria-labelledby="tools-title">
+    <div class="tools-side">
+      <h2 id="tools-title">One window, six jobs</h2>
+      <figure class="crop-demo">
+        <div class="crop-frame">
+          <img src="assets/bamboo.webp" width="1200" height="800" alt="Bamboo grove seen from below, with a 4:3 crop frame drawn over it" loading="lazy">
+          <span class="crop-box" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        </div>
+        <figcaption class="mono muted">Crop · 4:3</figcaption>
+      </figure>
+    </div>
+
+    <ol class="tool-list">
+      <li>
+        <h3>Crop</h3>
+        <p>Drag a frame freely or lock it to 1:1, 4:3, 16:9 or 9:16. Rotate and flip in 90° steps.</p>
+      </li>
+      <li>
+        <h3>Resize</h3>
+        <p>Type a width and height in pixels with the ratio locked, then choose fit, fill, stretch or none.</p>
+      </li>
+      <li>
+        <h3>Compress</h3>
+        <p>Set the quality from 1 to 100 and compare the result against the original before you save it.</p>
+      </li>
+      <li>
+        <h3>Convert</h3>
+        <p>Open JPEG, PNG and WebP. Save as JPEG, PNG, WebP or AVIF.</p>
+      </li>
+      <li>
+        <h3>Batch</h3>
+        <p>Queue a set of images and export them together. Name the files with <code>{name}</code>, <code>{w}</code>, <code>{h}</code>, <code>{format}</code> and <code>{date}</code>.</p>
+      </li>
+      <li>
+        <h3>Offline</h3>
+        <p>Images are read and written on your disk. Henko needs no account and sends your files nowhere.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="download" id="download" aria-labelledby="download-title">
+    <div class="download-text">
+      <h2 id="download-title">Download</h2>
+      <p>Each link opens the latest release on GitHub. Choose the file that matches your system.</p>
+      <ul class="platforms">
+        <li>
+          <span class="platform">macOS</span>
+          <span class="mono muted">.dmg</span>
+          <a class="btn btn-ghost" data-release href="releases/latest">Get the .dmg</a>
+        </li>
+        <li>
+          <span class="platform">Windows</span>
+          <span class="mono muted">.msi or .exe</span>
+          <a class="btn btn-ghost" data-release href="releases/latest">Get the installer</a>
+        </li>
+        <li>
+          <span class="platform">Linux</span>
+          <span class="mono muted">.AppImage</span>
+          <a class="btn btn-ghost" data-release href="releases/latest">Get the AppImage</a>
+        </li>
+      </ul>
+    </div>
+    <img class="lantern" src="assets/lantern.webp" width="1200" height="800" alt="" loading="lazy">
+  </section>
+</main>
+
+<footer class="foot">
+  <p>Photos from Unsplash, used under the <a href="https://unsplash.com/license">Unsplash License</a>:
+    mountains by <a href="https://unsplash.com/photos/X0OoHrPvgXE">Luca Zanon</a>,
+    bamboo by <a href="https://unsplash.com/photos/buF62ewDLcQ">Jason Ortego</a>,
+    lantern by <a href="https://unsplash.com/photos/v7r8kZStqFw">mr.lee</a>.</p>
+  <p>Henko is MIT licensed.</p>
+</footer>
+
+<script>
+(function () {
+  var host = location.hostname;
+  if (/\.github\.io$/.test(host)) {
+    var owner = host.split(".")[0];
+    var repo = location.pathname.split("/").filter(Boolean)[0] || host;
+    var url = "https://github.com/" + owner + "/" + repo + "/releases/latest";
+    document.querySelectorAll("[data-release]").forEach(function (a) { a.href = url; });
+  }
+  var fig = document.getElementById("compare");
+  var input = document.getElementById("split");
+  input.addEventListener("input", function () { fig.style.setProperty("--split", input.value + "%"); });
+})();
+</script>
+</body>
+</html>
