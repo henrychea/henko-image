@@ -3,9 +3,89 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Henko: offline image crop, resize, compress and convert</title>
-<meta name="description" content="Henko is a desktop app for macOS, Windows and Linux that crops, resizes, compresses and converts images on your own computer.">
+<title>Henko: offline image resizer, cropper, converter</title>
+<meta name="description" content="Free, open-source image resizer for macOS, Windows and Linux. Crop, resize, compress and convert images offline in batches. No ads, no uploads.">
 <meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F4F0E6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141311" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://henrychea.github.io/henko-image/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Henko">
+<meta property="og:title" content="Henko: offline image resizer, cropper, converter">
+<meta property="og:description" content="Crop, resize, compress and convert images offline on macOS, Windows and Linux. Batch export, live preview, no ads, MIT licensed.">
+<meta property="og:url" content="https://henrychea.github.io/henko-image/">
+<meta property="og:image" content="https://henrychea.github.io/henko-image/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Henko, an offline image resize, crop, compress and convert app">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Henko: offline image resizer, cropper, converter">
+<meta name="twitter:description" content="Crop, resize, compress and convert images offline on macOS, Windows and Linux. Batch export, live preview, no ads, MIT licensed.">
+<meta name="twitter:image" content="https://henrychea.github.io/henko-image/assets/og.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Henko",
+  "alternateName": "変更",
+  "applicationCategory": "MultimediaApplication",
+  "applicationSubCategory": "Image editor",
+  "operatingSystem": "macOS, Windows, Linux",
+  "softwareVersion": "0.1.0",
+  "url": "https://henrychea.github.io/henko-image/",
+  "downloadUrl": "https://github.com/henrychea/henko-image/releases/latest",
+  "license": "https://opensource.org/license/mit",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Free, open-source desktop image resize tool. Crop, resize, compress and convert images offline in batches, with a live before/after preview.",
+  "featureList": [
+    "Crop with aspect ratio lock and rotate or flip",
+    "Resize by pixel width and height with ratio lock",
+    "Compress with a quality slider and live size preview",
+    "Convert between JPEG, PNG, WebP and AVIF",
+    "Batch export with filename patterns",
+    "Works offline with no account, no ads and no telemetry"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Henko free?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Henko is MIT licensed, with no paid tier, no ads, no account and no telemetry." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Henko upload my images?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. Image files are read from and written to your own disk. There is no upload path and no analytics." }
+    },
+    {
+      "@type": "Question",
+      "name": "Which operating systems does it run on?",
+      "acceptedAnswer": { "@type": "Answer", "text": "macOS 11 or later as a universal build for Intel and Apple Silicon, Windows 10 and 11 as an .msi or .exe installer, and Linux x86_64 as an AppImage." }
+    },
+    {
+      "@type": "Question",
+      "name": "Which image formats are supported?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Open JPEG, PNG and WebP. Save as JPEG, PNG, WebP or AVIF." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I resize and convert a whole folder at once?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Add multiple images to the batch list, apply one setting to all of them, and export together with a filename pattern such as {name}_{w}x{h}." }
+    },
+    {
+      "@type": "Question",
+      "name": "How is this different from an online image resizer?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Nothing is uploaded, so there are no file size limits, no upload queue and no waiting for a server. It works offline, shows the compression result at full resolution before you save, and has no ads." }
+    }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Noto+Sans+JP:wght@400;500&family=Noto+Serif+JP:wght@600&display=swap">
@@ -19,6 +99,7 @@
     <a href="#compare">Compare</a>
     <a href="#tools">Tools</a>
     <a href="#download">Download</a>
+    <a href="#faq">Questions</a>
   </nav>
 </header>
 
@@ -26,12 +107,13 @@
   <section class="hero" id="top" aria-labelledby="title">
     <div class="hero-text">
       <h1 id="title"><span class="kanji" lang="ja">変更</span><span class="caps">Henko</span></h1>
-      <p class="lead">Crop, resize, compress and convert images on your own computer. Nothing is uploaded.</p>
+      <p class="lead">Crop, resize, compress and convert images on your own computer. One window, a live before and after preview, no uploads.</p>
       <div class="actions">
         <a class="btn btn-primary" data-release href="releases/latest">Download the latest release</a>
         <a class="btn btn-ghost" href="#download">Pick your platform</a>
       </div>
       <p class="mono muted">macOS · Windows · Linux</p>
+      <p class="trust mono muted">MIT licensed · No ads · No account · Works offline</p>
     </div>
 
     <figure class="compare" id="compare" style="--split: 50%">
@@ -115,6 +197,36 @@
     </div>
     <img class="lantern" src="assets/lantern.webp" width="1200" height="800" alt="" loading="lazy">
   </section>
+
+  <section class="faq" id="faq" aria-labelledby="faq-title">
+    <h2 id="faq-title">Questions</h2>
+    <div class="faq-list">
+      <details>
+        <summary>Is Henko free?</summary>
+        <p>Yes. Henko is MIT licensed, with no paid tier, no ads, no account and no telemetry.</p>
+      </details>
+      <details>
+        <summary>Does Henko upload my images?</summary>
+        <p>No. Image files are read from and written to your own disk. There is no upload path and no analytics.</p>
+      </details>
+      <details>
+        <summary>Which operating systems does it run on?</summary>
+        <p>macOS 11 or later as a universal build for Intel and Apple Silicon, Windows 10 and 11 as an <span class="mono">.msi</span> or <span class="mono">.exe</span> installer, and Linux x86_64 as an AppImage.</p>
+      </details>
+      <details>
+        <summary>Which image formats are supported?</summary>
+        <p>Open JPEG, PNG and WebP. Save as JPEG, PNG, WebP or AVIF.</p>
+      </details>
+      <details>
+        <summary>Can I resize and convert a whole folder at once?</summary>
+        <p>Yes. Add multiple images to the batch list, apply one setting to all of them, then export together with a filename pattern such as <code>{name}_{w}x{h}</code>.</p>
+      </details>
+      <details>
+        <summary>How is this different from an online image resizer?</summary>
+        <p>Nothing is uploaded, so there are no file size limits, no upload queue and no waiting for a server. It works offline, shows the compression result at full resolution before you save, and has no ads.</p>
+      </details>
+    </div>
+  </section>
 </main>
 
 <footer class="foot">
@@ -122,7 +234,7 @@
     mountains by <a href="https://unsplash.com/photos/X0OoHrPvgXE">Luca Zanon</a>,
     bamboo by <a href="https://unsplash.com/photos/buF62ewDLcQ">Jason Ortego</a>,
     lantern by <a href="https://unsplash.com/photos/v7r8kZStqFw">mr.lee</a>.</p>
-  <p>Henko is MIT licensed.</p>
+  <p>Henko is <a href="https://github.com/henrychea/henko-image">MIT licensed</a>. Source, issues and releases are on GitHub.</p>
 </footer>
 
 <script>

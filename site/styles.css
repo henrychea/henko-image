@@ -349,6 +349,30 @@ h1 .caps { color: var(--muted); }
 }
 .foot p + p { margin-top: 8px; }
 
+.trust { margin-top: 8px; }
+
+.faq { display: grid; gap: 24px; }
+.faq h2 { max-width: 20ch; }
+.faq-list { border-top: 1px solid var(--rule); max-width: 72ch; }
+.faq details { border-bottom: 1px solid var(--rule); }
+.faq summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+  padding: 18px 0;
+  cursor: pointer;
+  font-family: var(--serif);
+  font-size: 1.0625rem;
+  list-style: none;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: var(--mono); color: var(--shu); }
+.faq details[open] summary::after { content: "\2212"; }
+.faq summary:focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
+.faq p { padding-bottom: 20px; max-width: 62ch; color: var(--muted); }
+
+
 @media (min-width: 720px) {
   .tools { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: clamp(32px, 6vw, 96px); }
   .tools-side { position: sticky; top: 24px; align-self: start; }
