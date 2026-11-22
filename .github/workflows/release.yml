@@ -30,16 +30,21 @@ jobs:
         id: release
         run: |
           lookup() {
-            gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
-              --jq "[.[] | select(.tag_name == \"$GITHUB_REF_NAME\")][0].id"
+            gh release view "$GITHUB_REF_NAME" --json databaseId \
+              --jq .databaseId 2>/dev/null || true
           }
           id=$(lookup)
-          if [ -z "$id" ] || [ "$id" = "null" ]; then
+          if [ -z "$id" ]; then
             gh release create "$GITHUB_REF_NAME" --draft \
               --title "Henko $GITHUB_REF_NAME" --generate-notes
-            id=$(lookup)
+            # The API lags after creation, so keep asking.
+            for attempt in 1 2 3 4 5 6 7 8 9 10; do
+              id=$(lookup)
+              if [ -n "$id" ]; then break; fi
+              sleep 3
+            done
           fi
-          if [ -z "$id" ] || [ "$id" = "null" ]; then
+          if [ -z "$id" ]; then
             echo "::error::No draft release for $GITHUB_REF_NAME"
             exit 1
           fi
