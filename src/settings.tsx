@@ -136,11 +136,11 @@ function Settings() {
           <div class="card">
             <div class="flex items-baseline justify-between">
               <div class="t-h1">変更 Henko</div>
-              <div class="t-mono text-muted">v0.1.0</div>
+              <div class="t-mono text-muted">v1.0.0</div>
             </div>
             <div class="t-sm mt-1 text-muted">
-              A quiet desktop tool for cropping, resizing, compressing and converting images.
-              Everything runs locally.
+              A quiet desktop tool for cropping, resizing, upscaling, compressing and converting
+              images. Everything runs locally.
             </div>
             <div class="t-mono mt-4 text-muted">
               Build target: Tauri 2 · SolidJS 2 · Rust image

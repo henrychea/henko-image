@@ -1,27 +1,28 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-type="software" data-radius="soft" data-ground="sand" data-buttons="pill" data-motion>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Henko: offline image resizer, cropper, converter</title>
-<meta name="description" content="Free, open-source image resizer for macOS, Windows and Linux. Crop, resize, compress and convert images offline in batches. No ads, no uploads.">
-<meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#F4F0E6" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#141311" media="(prefers-color-scheme: dark)">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Henko: offline desktop image editor for macOS, Windows and Linux</title>
+<meta name="description" content="Crop, resize, upscale, compress and convert images in one window that runs on your own machine. Free, MIT licensed and offline.">
+<meta name="site-kind" content="software">
+<meta name="page-type" content="software">
 <link rel="canonical" href="https://henrychea.github.io/henko-image/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Henko">
-<meta property="og:title" content="Henko: offline image resizer, cropper, converter">
-<meta property="og:description" content="Crop, resize, compress and convert images offline on macOS, Windows and Linux. Batch export, live preview, no ads, MIT licensed.">
+<meta property="og:title" content="Henko: offline desktop image editor">
+<meta property="og:description" content="Crop, resize, upscale, compress and convert images in one window. Free, MIT licensed, and nothing leaves your machine.">
 <meta property="og:url" content="https://henrychea.github.io/henko-image/">
 <meta property="og:image" content="https://henrychea.github.io/henko-image/assets/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Henko, an offline image resize, crop, compress and convert app">
+<meta property="og:image:alt" content="Henko, an offline image editor, open on a photo with the export finished">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Henko: offline image resizer, cropper, converter">
-<meta name="twitter:description" content="Crop, resize, compress and convert images offline on macOS, Windows and Linux. Batch export, live preview, no ads, MIT licensed.">
+<meta name="twitter:title" content="Henko: offline desktop image editor">
+<meta name="twitter:description" content="Crop, resize, upscale, compress and convert images in one window. Free, MIT licensed, and offline.">
 <meta name="twitter:image" content="https://henrychea.github.io/henko-image/assets/og.jpg">
+<link rel="icon" href="assets/icon.png" type="image/png">
+<meta name="theme-color" content="#f4f0e6">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -31,20 +32,21 @@
   "applicationCategory": "MultimediaApplication",
   "applicationSubCategory": "Image editor",
   "operatingSystem": "macOS, Windows, Linux",
-  "softwareVersion": "0.1.0",
+  "softwareVersion": "1.0.0",
   "url": "https://henrychea.github.io/henko-image/",
   "downloadUrl": "https://github.com/henrychea/henko-image/releases/latest",
   "license": "https://opensource.org/license/mit",
   "isAccessibleForFree": true,
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "description": "Free, open-source desktop image resize tool. Crop, resize, compress and convert images offline in batches, with a live before/after preview.",
+  "description": "Free, MIT-licensed desktop image editor that runs offline. Crop, resize, upscale, compress and convert images in one window, in batches, with a live before and after preview.",
   "featureList": [
-    "Crop with aspect ratio lock and rotate or flip",
-    "Resize by pixel width and height with ratio lock",
-    "Compress with a quality slider and live size preview",
-    "Convert between JPEG, PNG, WebP and AVIF",
-    "Batch export with filename patterns",
-    "Works offline with no account, no ads and no telemetry"
+    "Crop freeform or to 1:1, 4:3, 16:9 and 9:16, with 90 degree rotation and flips",
+    "Resize by width and height with a ratio lock, or by percentage, with Fit, Fill, Stretch and None",
+    "Non-AI upscale at 1.5x, 2x, 3x and 4x up to 16384 px, with pre-upscale artifact removal, edge-aware sharpening and Catmull-Rom, Lanczos3 or nearest-neighbour filtering",
+    "Compress at a quality from 1 to 100 with the encoded byte count shown live",
+    "Open JPEG, PNG and WebP; save JPEG, PNG, WebP or AVIF",
+    "Queue many images, remove single items or clear the queue, and export with a filename pattern such as {name}_{w}x{h}",
+    "Runs 100% locally with no uploads, no account, no ads and no telemetry"
   ]
 }
 </script>
@@ -56,188 +58,656 @@
     {
       "@type": "Question",
       "name": "Is Henko free?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Henko is MIT licensed, with no paid tier, no ads, no account and no telemetry." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. It is MIT licensed, with nothing to buy and no sign-up." }
     },
     {
       "@type": "Question",
       "name": "Does Henko upload my images?",
-      "acceptedAnswer": { "@type": "Answer", "text": "No. Image files are read from and written to your own disk. There is no upload path and no analytics." }
+      "acceptedAnswer": { "@type": "Answer", "text": "It reads and writes only the files you pick. The app sends nothing out." }
     },
     {
       "@type": "Question",
-      "name": "Which operating systems does it run on?",
-      "acceptedAnswer": { "@type": "Answer", "text": "macOS 11 or later as a universal build for Intel and Apple Silicon, Windows 10 and 11 as an .msi or .exe installer, and Linux x86_64 as an AppImage." }
+      "name": "Which systems does it run on?",
+      "acceptedAnswer": { "@type": "Answer", "text": "macOS 11 or later in a universal build, Windows 10 and 11, and Linux x86_64 as an AppImage." }
     },
     {
       "@type": "Question",
-      "name": "Which image formats are supported?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Open JPEG, PNG and WebP. Save as JPEG, PNG, WebP or AVIF." }
+      "name": "Can it batch a whole folder?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Add the files to the queue, set the tools once, then export with a pattern such as {name}_{w}x{h}." }
     },
     {
       "@type": "Question",
-      "name": "Can I resize and convert a whole folder at once?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Add multiple images to the batch list, apply one setting to all of them, and export together with a filename pattern such as {name}_{w}x{h}." }
-    },
-    {
-      "@type": "Question",
-      "name": "How is this different from an online image resizer?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Nothing is uploaded, so there are no file size limits, no upload queue and no waiting for a server. It works offline, shows the compression result at full resolution before you save, and has no ads." }
+      "name": "What is it not for?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Layers, masks and generative fill. Henko converts and resizes images; it does not retouch them." }
     }
   ]
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Noto+Sans+JP:wght@400;500&family=Noto+Serif+JP:wght@600&display=swap">
-<link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wdth,wght@85..100,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/system.css">
+<link rel="stylesheet" href="assets/ui/cards.css">
+<link rel="stylesheet" href="assets/motion/motion.css">
+<link rel="stylesheet" href="assets/layout/layout.css">
+<!-- the client's own colours through start.mjs brand: washi, surface, ink, muted and the shu seal; keep this <style> after the links -->
+<style>
+:root {
+  --p-bg: #f4f0e6; --p-surface: #fbf8f2; --p-ink: #1e1b16; --p-muted: #6b655a;
+  --p-accent: #c3402a; --p-accent-ink: #f4f0e6; --p-action: #c3402a; --p-action-ink: #f4f0e6;
+  --p-inv-bg: #1e1b16; --p-inv-surface: #2a2722; --p-inv-ink: #f4f0e6; --p-inv-muted: #9b978f;
+  --p-inv-accent: #c3402a; --p-inv-accent-ink: #f4f0e6; --p-inv-action: #c3402a; --p-inv-action-ink: #f4f0e6;
+  --font-display: "IBM Plex Sans", system-ui, sans-serif;
+  --font-text: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --display-weight: 500;
+  --display-tracking: -0.025em;
+  --display-tracking-xl: -0.035em;
+  --ly-scale: 0.98;
+}
+</style>
+<script>document.documentElement.classList.add('m-enter');setTimeout(()=>document.documentElement.classList.add('m-enter-done'),700)</script>
+<script>document.documentElement.classList.add('mo-js');setTimeout(()=>document.documentElement.classList.add('mo-safe'),2500)</script>
+<link rel="modulepreload" href="assets/moments/moments.js">
+<link rel="modulepreload" href="assets/moments/lib.js">
+<link rel="modulepreload" href="assets/moments/liquid-type/moment.js">
+<link rel="modulepreload" href="assets/moments/marquee-row/moment.js">
+<!-- page CSS: the app's own window, drawn as live HTML inside a visual, and one --p-h per card group -->
+<style>
+/* the secondary (pill) button's fill stands 1.6:1 off the washi ground, so it reads as a button */
+html[data-buttons="pill"] .btn--secondary { background: color-mix(in oklab, var(--ink) 24%, var(--bg)); }
+html[data-buttons="pill"] .btn--secondary:hover { background: color-mix(in oklab, var(--ink) 32%, var(--bg)); }
+/* the close's wordmark: one line as tall as its glyphs, never clipped by the kit's .86 */
+.close__word { line-height: 1; }
+
+/* ---- the app's own UI (a live screen inside a visual: page CSS, never a second system) */
+.hu {
+  --hu-bg: #fffdf9; --hu-ink: #1e1b16; --hu-mut: #6b655a;
+  --hu-line: color-mix(in oklab, #1e1b16 13%, transparent);
+  --hu-acc: #c3402a;
+  background: var(--hu-bg); color: var(--hu-ink); text-align: left;
+  border: 1px solid var(--hu-line); border-radius: 10px; overflow: clip;
+  font: 400 13px/1.35 var(--font-text);
+}
+.hu-num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 12px; }
+.hu-bar { display: flex; align-items: center; gap: 10px; height: 34px; padding: 0 12px; border-bottom: 1px solid var(--hu-line); font-size: 13px; color: var(--hu-mut); }
+.hu-bar b { font-weight: 500; color: var(--hu-ink); }
+.hu-dots { display: flex; gap: 5px; flex: none; }
+.hu-dots i { width: 8px; height: 8px; border-radius: 50%; background: color-mix(in oklab, #1e1b16 17%, transparent); }
+.hu-sp { margin-left: auto; }
+.hu-chip { display: inline-flex; align-items: center; height: 21px; padding: 0 8px; border-radius: 5px; white-space: nowrap;
+  background: color-mix(in oklab, #1e1b16 6%, transparent); font: 500 12px/1 var(--font-text); color: var(--hu-ink); }
+.hu-chip.is-on { background: var(--hu-acc); color: #f4f0e6; }
+.hu-lbl { font: 500 12px/1 var(--font-text); color: var(--hu-mut); }
+.hu-row { display: flex; align-items: center; gap: 8px; }
+.hu-kv { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; font-size: 13px; }
+.hu-kv > span:last-child { color: var(--hu-mut); }
+.hu-sec { display: grid; gap: 10px; padding: 14px; }
+.hu-sec > .hu-chip, .hu-sec > .hu-note { justify-self: start; }
+.hu-sec + .hu-sec { border-top: 1px solid var(--hu-line); }
+.hu-trk { position: relative; height: 6px; border-radius: 99px; background: color-mix(in oklab, #1e1b16 10%, transparent); }
+.hu-trk > i { position: absolute; inset: 0 auto 0 0; width: var(--v, 40%); border-radius: inherit; background: var(--hu-acc); }
+.hu-trk > u { position: absolute; top: -5px; left: var(--v, 40%); width: 16px; height: 16px; margin-left: -8px; border-radius: 50%;
+  background: var(--hu-bg); border: 1px solid var(--hu-line); box-shadow: 0 1px 2px rgb(30 27 22 / .18); }
+.hu-note { font-size: 12px; color: var(--hu-mut); }
+
+/* the hero's window: the app on one photo, the inspector's export finished */
+.hw { width: 100%; }
+.hw__body { display: grid; grid-template-columns: 148px minmax(0, 1fr) 208px; min-height: 356px; }
+.hw__side { padding: 10px 8px; border-right: 1px solid var(--hu-line); display: grid; align-content: start; gap: 2px; font-size: 13px; color: var(--hu-mut); }
+.hw__side > span { display: flex; align-items: center; gap: 8px; height: 28px; padding: 0 8px; border-radius: 6px; }
+.hw__side > span.is-on { background: color-mix(in oklab, #1e1b16 6%, transparent); color: var(--hu-ink); font-weight: 500; }
+.hw__side > span.is-on::before { content: ""; width: 3px; height: 14px; margin-left: -8px; border-radius: 0 2px 2px 0; background: var(--hu-acc); }
+.hw__side > span i { width: 12px; height: 12px; border: 1.5px solid currentColor; border-radius: 3px; flex: none; opacity: .5; }
+.hw__stage { position: relative; padding: 14px; background: color-mix(in oklab, #1e1b16 5%, var(--hu-bg)); min-width: 0; }
+.hw__canvas { position: relative; height: 100%; border-radius: 4px; overflow: clip; background: #2c2a25; }
+.hw__canvas > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hw__box { position: absolute; left: 12%; top: 10%; width: 62%; height: 74%; border: 1px solid #ffffff;
+  box-shadow: 0 0 0 100vmax rgb(20 18 15 / .42); }
+.hw__box::before, .hw__box::after { content: ""; position: absolute; width: 9px; height: 9px; border: 1.5px solid #fff; border-radius: 1px; background: rgb(30 27 22 / .35); }
+.hw__box::before { left: -5px; top: -5px; }
+.hw__box::after { right: -5px; bottom: -5px; }
+.hw__badge { position: absolute; left: 14px; bottom: 14px; z-index: 2; }
+.hw__insp { border-left: 1px solid var(--hu-line); }
+
+/* ---- the app frame: the queue, the canvas and the inspector, one window across the .wrap */
+.wk { display: grid; grid-template-columns: minmax(0, 296px) minmax(0, 1fr) minmax(0, 296px);
+  margin-top: var(--s-7); min-height: 0; overflow: clip; }
+.wk > * { min-width: 0; min-height: 0; overflow: hidden; }
+.wk > * + * { border-left: 1px solid var(--hu-line); }
+.wk__pane { display: flex; flex-direction: column; background: var(--hu-bg); }
+.wk__bar { display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 12px; font-size: 13px;
+  background: color-mix(in oklab, #1e1b16 3%, var(--hu-bg)); }
+.wk__bar b { font-weight: 500; }
+.wk__bar .hu-sp { color: var(--hu-mut); }
+.wk__btn { height: 24px; padding: 0 9px; border: 1px solid var(--hu-line); border-radius: 5px; background: none; color: var(--hu-ink);
+  font: 500 12px/1 var(--font-text); cursor: pointer; }
+.wk__btn:hover { background: color-mix(in oklab, #1e1b16 6%, transparent); }
+.wk__files { display: grid; align-content: start; }
+.wk__file { display: grid; grid-template-columns: minmax(0, 1fr) 32px; gap: 2px 8px; padding: 9px 8px 9px 12px; border-bottom: 1px solid var(--hu-line); position: relative; }
+.wk__file.is-on { background: color-mix(in oklab, #c3402a 7%, transparent); }
+.wk__file.is-on::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--hu-acc); }
+.wk__name { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wk__file small { grid-column: 1; font-size: 12px; color: var(--hu-mut); }
+.wk__x { grid-column: 2; grid-row: 1 / span 2; align-self: center; width: 24px; height: 24px; display: grid; place-items: center;
+  border: 0; border-radius: 5px; background: none; color: var(--hu-mut); font: 400 15px/1 var(--font-text); cursor: pointer; }
+.wk__x:hover { background: color-mix(in oklab, #1e1b16 8%, transparent); color: var(--hu-ink); }
+.wk__empty { padding: 22px 14px; font-size: 13px; color: var(--hu-mut); }
+.wk__canvas { display: flex; flex-direction: column; background: color-mix(in oklab, #1e1b16 5%, var(--hu-bg)); }
+.wk__fig { position: relative; flex: 1 1 0; min-height: 0; margin: 12px 12px 0; border-radius: 4px; overflow: clip; background: #2c2a25; }
+.wk__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.wk__img--before { clip-path: inset(0 calc(100% - var(--split, 58%)) 0 0); }
+.wk__div { position: absolute; top: 0; bottom: 0; left: var(--split, 58%); width: 1px; background: #fffdf9; opacity: .85; }
+.wk__div::after { content: ""; position: absolute; top: 50%; left: -8px; width: 17px; height: 17px; margin-top: -8px; border-radius: 50%;
+  background: #fffdf9; box-shadow: 0 1px 4px rgb(0 0 0 / .35); }
+.wk__split { display: grid; gap: 6px; padding: 10px 14px 0; }
+.wk__split label { font-size: 12px; color: var(--hu-mut); }
+.wk__slider { width: 100%; height: 20px; margin: 0; accent-color: var(--hu-acc); cursor: pointer; }
+.wk__legend { display: flex; flex-wrap: wrap; gap: 4px 14px; padding: 6px 14px 12px; font-size: 12px; color: var(--hu-mut); }
+.wk__legend b { font-weight: 500; color: var(--hu-ink); }
+.wk__saved { margin-left: auto; color: var(--hu-acc); font-weight: 500; }
+.wk__insp { display: grid; align-content: start; background: var(--hu-bg); }
+.wk__chips { display: flex; flex-wrap: wrap; gap: 4px; }
+
+/* the four tool cards' panels: the app's own rows on the lit ground */
+#tools .panel { --p-h: 300px; }
+#tools .panel > .hu { position: absolute; inset: 0; border: 0; border-radius: 0; }
+.crop { position: absolute; inset: 0; overflow: clip; }
+.crop > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%; }
+.crop__box { position: absolute; left: 14%; top: 12%; width: 58%; height: 66%; border: 1.5px solid #fffdf9;
+  box-shadow: 0 0 0 100vmax rgb(24 21 18 / .45); }
+.crop__box::before, .crop__box::after { content: ""; position: absolute; width: 10px; height: 10px; border: 1.5px solid #fffdf9; background: rgb(24 21 18 / .4); }
+.crop__box::before { left: -6px; top: -6px; }
+.crop__box::after { right: -6px; bottom: -6px; }
+.crop__ratios { position: absolute; left: 0; right: 0; bottom: 0; display: flex; gap: 4px; padding: 10px; background: rgb(24 21 18 / .55); }
+.crop__ratios span { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 5px; background: rgb(255 253 249 / .16); color: #fffdf9; font: 500 12px/1 var(--font-text); }
+.crop__ratios span.is-on { background: #fffdf9; color: #1e1b16; }
+.flds { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.fld { display: grid; gap: 5px; }
+.fld > span { font: 500 12px/1 var(--font-text); color: var(--hu-mut); }
+.fld > b { display: flex; align-items: center; justify-content: space-between; height: 30px; padding: 0 9px; border: 1px solid var(--hu-line); border-radius: 5px; font: 400 13px/1 var(--font-mono); }
+.fld > b em { font-style: normal; color: var(--hu-mut); font-size: 12px; }
+.bars { display: grid; gap: 6px; }
+.bars > div { display: grid; gap: 5px; }
+.bars .hu-kv { font-size: 12px; }
+.bars .hu-kv b { font: 500 13px/1 var(--font-mono); }
+.fmts { display: grid; }
+.fmts > div { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-top: 1px solid var(--hu-line); font-size: 13px; }
+.fmts > div:first-child { border-top: 0; padding-top: 2px; }
+.fmts .hu-sp { color: var(--hu-mut); font-family: var(--font-mono); font-size: 12px; }
+
+/* the upscale panel and the export panel: still screens on the lit ground */
+.ups { border-radius: var(--r-lg); --p-h: 520px; padding: 0; }
+.ups > .hu { height: 100%; border-radius: var(--r-lg); }
+.ups__sliders .hu-kv { font-size: 13px; }
+.exp { border-radius: var(--r-lg); --p-h: 520px; padding: 0; }
+.rel-panel { border-radius: var(--r-lg); --p-h: 420px; padding: 0; }
+.rel-panel > .hu { height: 100%; border-radius: var(--r-lg); }
+.exp > .hu { height: 100%; border-radius: var(--r-lg); }
+.exp__pat { display: flex; align-items: center; height: 34px; padding: 0 10px; border: 1px solid var(--hu-line); border-radius: 6px;
+  font: 400 13px/1 var(--font-mono); background: var(--hu-bg); }
+.exp__pat i { width: 1px; height: 16px; margin-left: 1px; background: var(--hu-acc); }
+.rel { display: grid; }
+.rel > div { display: flex; align-items: baseline; gap: 10px; padding: 10px 0; border-top: 1px solid var(--hu-line); font-size: 13px; }
+.rel > div:first-child { border-top: 0; padding-top: 0; }
+
+/* the statement's facts: the app's own numbers, on the page's hairline */
+.facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-5) var(--gutter);
+  margin-top: var(--s-8); }
+.facts > div { display: grid; gap: var(--s-1); align-content: start; }
+.facts dt { font-size: var(--t-small); color: var(--muted); }
+.facts dd { margin: 0; font-weight: 500; }
+@media (max-width: 639px) { .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: var(--s-7); } }
+
+/* a split that fills the screen: its one row takes what the heading leaves, its panel with it */
+main > section > .wrap > .grid.fill { grid-template-rows: 1fr; }
+@media (min-width: 1024px) {
+  #upscale .panel, #download .panel { height: calc(100svh - var(--padt) - var(--padb) - var(--bar)); }
+  #export .panel { height: calc(100svh - var(--padt) - var(--padb) - var(--bar) - 180px); }
+}
+/* a still screen on the lit ground: its sections stack from the top, its action row sits at the foot */
+.ups > .hu, .exp > .hu, .rel-panel > .hu { display: flex; flex-direction: column; height: 100%; }
+.ups > .hu > .hu-sec:last-child, .exp > .hu > .hu-sec:last-child, .rel-panel > .hu > .hu-sec:last-child { margin-top: auto; }
+.marq { margin-top: var(--s-7); }
+
+/* the workspace heading's split and the small screens */
+.wk-head { row-gap: var(--s-5); }
+.wk-head__side { display: grid; gap: var(--s-5); align-content: start; }
+.wk-head__side p { font-size: var(--t-lead); line-height: 1.5; max-width: 58ch; }
+/* under 1280 the queue gives its column to the canvas; the window keeps the inspector beside it */
+@media (max-width: 1279px) {
+  .wk { grid-template-columns: minmax(0, 1fr) minmax(0, 296px); }
+  .wk > :first-child { display: none; }
+  .wk > * + * { border-left: 1px solid var(--hu-line); }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  .wk__fig { flex: none; height: 300px; }
+  .hero__art > .ly-piece--main { left: 0; width: 100%; }
+  .ups, .exp, .rel-panel { --p-h: 400px; background: none; }
+  .ups .hu-sec, .exp .hu-sec, .rel-panel .hu-sec, .ups .hu-bar, .exp .hu-bar, .rel-panel .hu-bar { padding-inline: 0; }
+  #tools .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #tools .grid > .card { grid-column: auto; }
+  #tools .panel { --p-h: 360px; }
+  .mo-lt__type { font-size: 132px; }
+}
+/* the window's content keeps clear of the frame's cut on the right (hero-collage runs 28px past it) */
+.hw .hu-bar, .hw__insp .hu-sec { padding-right: 44px; }
+.hw__body { min-height: 356px; }
+@media (max-width: 1023px) { .hw__body { grid-template-columns: 132px minmax(0, 1fr); } .hw__insp { display: none; } }
+@media (max-width: 639px) {
+  main > section > .wrap > .grid.fill { flex: 0 0 auto; }
+  #tools .panel { --p-h: 170px; }
+  #tools .section-head--row > a.link { display: none; }
+  .ups { --p-h: 240px; }
+  .exp { --p-h: 260px; }
+  .rel-panel { --p-h: 240px; }
+  .slim, .pct { display: none; }
+  #export .split-col > .t-small, #download .split-col > p { display: none; }
+  #questions .faq__item--wide { display: none; }
+  #download .rows p { display: none; }
+  #tools .hu-sec { padding-inline: 0; }
+  .bars > .hu-kv:last-child, .fmts > div:nth-child(1), .fmts > div:nth-child(2) { display: none; }
+  .fmts > div { padding: 4px 0; }
+  #workspace { --hm: 2; }
+  .wk > :first-child { display: flex; }
+  .wk__files .wk__file:nth-child(3) { display: none; }
+  .wk__x, .wk__btn { width: 44px; height: 44px; }
+  .wk__pane { overflow: visible; }
+  .hw { height: 100%; }
+  .hw > .hu { height: 100%; }
+  .hero__art > .ly-piece--main { left: 0; top: 0; width: 100%; height: 100%; }
+  .hw .hu-bar, .hw__side, .hw__insp { display: none; }
+  .hw__body { grid-template-columns: minmax(0, 1fr); min-height: 0; height: 100%; }
+  .hw__stage { padding: 0; }
+  .hw__canvas { border-radius: var(--r-lg); }
+  .wk { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; margin-top: var(--s-6); }
+  .wk > * + * { border-left: 0; }
+  .wk__insp > .hu-sec:last-child { display: none; }
+  .wk__fig { min-height: 260px; margin-top: 26px; }
+  .wk__slider { height: 44px; }
+  .wk__btn { height: 32px; }
+  .ups, .exp, .rel-panel { padding: 0; }
+  .ups > .hu, .exp > .hu, .rel-panel > .hu { height: 100%; border: 0; border-radius: var(--r-lg); }
+}
+</style>
 </head>
 <body>
-<a class="skip" href="#main">Skip to content</a>
-<header class="bar">
-  <a class="mark" href="#top" aria-label="Henko, top of page"><span lang="ja">変更</span> Henko</a>
-  <nav aria-label="Sections">
-    <a href="#compare">Compare</a>
-    <a href="#tools">Tools</a>
-    <a href="#download">Download</a>
-    <a href="#faq">Questions</a>
-  </nav>
+<!-- type: software
+     deal: hero collage | nav-centre (re-dealt from nav-mega: its recipe needs 6 to 12 feature pages with two or three link columns and a menu card, and this is one page with five sections) | footer-columns | close-word | rhythm space | buttons pill | mark: the client's app icon, assets/icon.png, in place of the dealt dots | palette: the client's own through start.mjs brand (washi, surface, ink, muted, shu) | type: plex (IBM Plex Sans + IBM Plex Mono) | grounds: the sand lit ground behind UI, no section ground | effect: none (the beats are the two dealt moments and the live product UI)
+     moments: liquid-type in the offline statement (#offline), marquee-row as the last row of the export section (#export) -->
+<header class="nav nav--centre">
+  <div class="wrap nav__bar">
+    <a class="skip-link" href="#top">Skip to content</a>
+    <a class="nav__logo" href="#top"><img src="assets/icon.png" alt="" width="24" height="24">Henko</a>
+    <nav class="nav__links" aria-label="Main">
+      <div class="nav__item"><a class="nav__link" href="#workspace">Workspace</a></div>
+      <div class="nav__item"><a class="nav__link" href="#tools">Tools</a></div>
+      <div class="nav__item"><a class="nav__link" href="#upscale">Upscale</a></div>
+      <div class="nav__item"><a class="nav__link" href="#questions">Questions</a></div>
+    </nav>
+    <div class="nav__actions">
+      <a class="btn btn--primary" href="#download">Download Henko</a>
+    </div>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-label="Menu"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+  </div>
 </header>
 
-<main id="main">
-  <section class="hero" id="top" aria-labelledby="title">
-    <div class="hero-text">
-      <h1 id="title"><span class="kanji" lang="ja">変更</span><span class="caps">Henko</span></h1>
-      <p class="lead">Crop, resize, compress and convert images on your own computer. One window, a live before and after preview, no uploads.</p>
-      <div class="actions">
-        <a class="btn btn-primary" data-release href="releases/latest">Download the latest release</a>
-        <a class="btn btn-ghost" href="#download">Pick your platform</a>
-      </div>
-      <p class="mono muted">macOS · Windows · Linux</p>
-      <p class="trust mono muted">MIT licensed · No ads · No account · Works offline</p>
-    </div>
-
-    <figure class="compare" id="compare" style="--split: 50%">
-      <div class="frame">
-        <img class="after" src="assets/mountains-q30.webp" width="1600" height="1067" alt="Layered blue mountains in mist, encoded at WebP quality 30" fetchpriority="high">
-        <img class="before" src="assets/mountains-q92.webp" width="1600" height="1067" alt="The same mountains encoded at WebP quality 92" fetchpriority="high">
-        <span class="tag tag-before mono">Original · 72.3 kB</span>
-        <span class="tag tag-after mono">Compressed · 13.1 kB</span>
-        <span class="handle" aria-hidden="true"></span>
-        <label class="sr-only" for="split">Divider position between original and compressed</label>
-        <input id="split" type="range" min="0" max="100" step="1" value="50">
-      </div>
-      <figcaption>
-        <span>Same photo, 1600 × 1067, WebP at quality 92 and 30. Drag the divider or use the arrow keys.</span>
-        <span class="mono saved">82% smaller</span>
-      </figcaption>
-    </figure>
-  </section>
-
-  <section class="tools" id="tools" aria-labelledby="tools-title">
-    <div class="tools-side">
-      <h2 id="tools-title">One window, six jobs</h2>
-      <figure class="crop-demo">
-        <div class="crop-frame">
-          <img src="assets/bamboo.webp" width="1200" height="800" alt="Bamboo grove seen from below, with a 4:3 crop frame drawn over it" loading="lazy">
-          <span class="crop-box" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+<main id="top">
+  <section class="hero hero--collage" data-enter aria-labelledby="hero-h">
+    <div class="wrap"><div class="hero-text grid hero__grid">
+      <div class="hero__text span-5">
+        <h1 id="hero-h">Offline image editor for macOS, Windows, Linux</h1>
+        <p class="hero__lead">Crop, resize, upscale, compress and convert images in one window, up to 16,384 px. It runs on your machine, so nothing is uploaded and no file has a limit.</p>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="#download">Download Henko</a>
+          <a class="btn btn--secondary" href="#workspace">See the workspace</a>
         </div>
-        <figcaption class="mono muted">Crop · 4:3</figcaption>
-      </figure>
-    </div>
-
-    <ol class="tool-list">
-      <li>
-        <h3>Crop</h3>
-        <p>Drag a frame freely or lock it to 1:1, 4:3, 16:9 or 9:16. Rotate and flip in 90° steps.</p>
-      </li>
-      <li>
-        <h3>Resize</h3>
-        <p>Type a width and height in pixels with the ratio locked, then choose fit, fill, stretch or none.</p>
-      </li>
-      <li>
-        <h3>Compress</h3>
-        <p>Set the quality from 1 to 100 and compare the result against the original before you save it.</p>
-      </li>
-      <li>
-        <h3>Convert</h3>
-        <p>Open JPEG, PNG and WebP. Save as JPEG, PNG, WebP or AVIF.</p>
-      </li>
-      <li>
-        <h3>Batch</h3>
-        <p>Queue a set of images and export them together. Name the files with <code>{name}</code>, <code>{w}</code>, <code>{h}</code>, <code>{format}</code> and <code>{date}</code>.</p>
-      </li>
-      <li>
-        <h3>Offline</h3>
-        <p>Images are read and written on your disk. Henko needs no account and sends your files nowhere.</p>
-      </li>
-    </ol>
+        <p class="hero__proof">v1.0.0 · free and MIT licensed · works with the network off</p>
+      </div>
+      <div class="hero__art span-6 start-7" role="img" aria-label="Henko's window on a photo of a paper lantern, with the crop box over it, the tool list on the left, the export settings on the right and a note that the export of three files has finished">
+        <div class="ly-piece ly-piece--main hw" aria-hidden="true">
+          <div class="hu">
+            <div class="hu-bar"><span class="hu-dots"><i></i><i></i><i></i></span><b>Henko</b><span>·</span><span>lantern.jpg</span><span class="hu-sp hu-num">2400 × 1600</span></div>
+            <div class="hw__body">
+              <div class="hw__side">
+                <span><i></i>Queue</span>
+                <span class="is-on"><i></i>Crop</span>
+                <span><i></i>Resize</span>
+                <span><i></i>Upscale</span>
+                <span><i></i>Compress</span>
+                <span><i></i>Convert</span>
+              </div>
+              <div class="hw__stage">
+                <div class="hw__canvas">
+                  <img src="assets/lantern-hero.webp" alt="" width="640" height="427">
+                  <span class="hw__box"></span>
+                  <span class="hw__badge hu-chip is-on">4:3</span>
+                </div>
+              </div>
+              <div class="hw__insp">
+                <div class="hu-sec">
+                  <div class="hu-kv"><span class="hu-lbl">Crop</span><span class="hu-chip">Freeform</span></div>
+                  <div class="hu-kv"><span>Ratio</span><span class="hu-num">4:3</span></div>
+                  <div class="hu-kv"><span>Turn</span><span class="hu-num">90°</span></div>
+                </div>
+                <div class="hu-sec">
+                  <div class="hu-kv"><span class="hu-lbl">Export</span><span class="hu-num">3 files</span></div>
+                  <div class="hu-row"><span class="hu-chip is-on">WebP</span><span class="hu-chip">AVIF</span><span class="hu-chip">JPEG</span></div>
+                  <div class="hu-kv"><span>Pattern</span><span class="hu-num">{name}_{w}</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ly-piece ly-piece--note ly-float" aria-hidden="true" data-ly-steps="700">
+          <div class="ly-float__row"><span class="ly-float__title">Export finished</span><span class="hu-chip is-on">3 files</span></div>
+          <p class="ly-float__row" data-step><span><b>lantern.jpg</b></span><span class="hu-num">1600 px</span></p>
+          <p class="ly-float__row" data-step><span>WebP, quality 62</span><span class="hu-num">12 kB</span></p>
+          <p class="ly-float__row" data-step><span>Written to Pictures</span><span class="hu-num">16:04</span></p>
+        </div>
+      </div>
+    </div></div>
   </section>
 
-  <section class="download" id="download" aria-labelledby="download-title">
-    <div class="download-text">
-      <h2 id="download-title">Download</h2>
-      <p>Each link opens the latest release on GitHub. Choose the file that matches your system.</p>
-      <ul class="platforms">
-        <li>
-          <span class="platform">macOS</span>
-          <span class="mono muted">.dmg</span>
-          <a class="btn btn-ghost" data-release href="releases/latest">Get the .dmg</a>
-        </li>
-        <li>
-          <span class="platform">Windows</span>
-          <span class="mono muted">.msi or .exe</span>
-          <a class="btn btn-ghost" data-release href="releases/latest">Get the installer</a>
-        </li>
-        <li>
-          <span class="platform">Linux</span>
-          <span class="mono muted">.AppImage</span>
-          <a class="btn btn-ghost" data-release href="releases/latest">Get the AppImage</a>
-        </li>
-      </ul>
+  <section class="section" id="workspace" aria-labelledby="workspace-h">
+    <div class="wrap">
+      <div class="grid wk-head">
+        <h2 class="span-5" id="workspace-h">Every image tool in one window</h2>
+        <div class="wk-head__side span-6 start-7">
+          <p>Pick a file in the queue, set the tool in the inspector and watch the canvas. The file on disk stays untouched until you export.</p>
+          <p><a class="link" href="#export">See the export pattern</a></p>
+        </div>
+      </div>
+      <div class="hu wk fill" role="group" aria-label="Henko's workspace: a queue of three images, the compressed copy against the original, and the inspector">
+        <div class="wk__pane" data-queue>
+          <div class="wk__bar"><b>Queue</b><span class="hu-sp hu-num" data-queue-count>3 images</span><button class="wk__btn" type="button" data-clear>Clear all</button></div>
+          <ul class="wk__files">
+            <li class="wk__file is-on"><span class="wk__name">mountains.jpg</span><small class="hu-num">1600 × 1067 · open</small><button class="wk__x" type="button" data-remove aria-label="Remove mountains.jpg">×</button></li>
+            <li class="wk__file"><span class="wk__name">lantern.jpg</span><small class="hu-num">2400 × 1600 · WebP</small><button class="wk__x" type="button" data-remove aria-label="Remove lantern.jpg">×</button></li>
+            <li class="wk__file"><span class="wk__name">bamboo.jpg</span><small class="hu-num">1200 × 800 · WebP</small><button class="wk__x" type="button" data-remove aria-label="Remove bamboo.jpg">×</button></li>
+          </ul>
+          <p class="wk__empty" data-empty hidden>The queue is empty. Drop images here to start again.</p>
+        </div>
+        <div class="wk__pane wk__canvas">
+          <div class="wk__bar"><b>mountains.jpg</b><span class="hu-num">1600 × 1067</span><span class="hu-sp hu-chip">Fit</span></div>
+          <figure class="wk__fig" style="--split: 58%">
+            <img class="wk__img" src="assets/preview-30.webp" srcset="assets/preview-30-640.webp 640w, assets/preview-30.webp 800w" sizes="(max-width: 639px) 316px, 656px" width="800" height="1067" loading="lazy" decoding="async" alt="The mountain photo compressed at WebP quality 30, its ridge softened">
+            <img class="wk__img wk__img--before" src="assets/preview-92.webp" srcset="assets/preview-92-640.webp 640w, assets/preview-92.webp 800w" sizes="(max-width: 639px) 316px, 656px" width="800" height="1067" loading="lazy" decoding="async" alt="The same mountains encoded at WebP quality 92, with fine detail in the mist">
+            <span class="wk__div" aria-hidden="true"></span>
+          </figure>
+          <div class="wk__split">
+            <label for="wk-split">Divider between the original and the compressed copy</label>
+            <input class="wk__slider" id="wk-split" type="range" min="0" max="100" step="1" value="58">
+          </div>
+          <p class="wk__legend"><span>Original <b class="hu-num">33.2 kB</b></span><span>Compressed <b class="hu-num">6.5 kB</b></span><span class="wk__saved">80% smaller</span></p>
+        </div>
+        <div class="wk__pane wk__insp">
+          <div class="hu-sec">
+            <div class="hu-kv"><span class="hu-lbl">Compress</span><span class="hu-num" data-q-out>quality 30</span></div>
+            <label class="hu-lbl" for="wk-quality">Quality</label>
+            <input class="wk__slider" id="wk-quality" type="range" min="20" max="100" step="1" value="30">
+            <div class="hu-kv"><span>WebP, 800 px wide</span><span class="hu-num" data-q-size>6.5 kB</span></div>
+            <div class="wk__chips"><span class="hu-chip">JPEG</span><span class="hu-chip is-on">WebP</span><span class="hu-chip">PNG</span><span class="hu-chip">AVIF</span></div>
+          </div>
+          <div class="hu-sec">
+            <div class="hu-kv"><span class="hu-lbl">Upscale</span><span class="hu-num" data-u-out>3200 × 2134</span></div>
+            <div class="wk__chips" data-factors><span class="hu-chip">1.5×</span><span class="hu-chip is-on">2×</span><span class="hu-chip">3×</span><span class="hu-chip">4×</span></div>
+            <div class="hu-kv"><span>Sharp, Lanczos3</span><span class="hu-num">16,384 max</span></div>
+          </div>
+        </div>
+      </div>
     </div>
-    <img class="lantern" src="assets/lantern.webp" width="1200" height="800" alt="" loading="lazy">
   </section>
 
-  <section class="faq" id="faq" aria-labelledby="faq-title">
-    <h2 id="faq-title">Questions</h2>
-    <div class="faq-list">
-      <details>
-        <summary>Is Henko free?</summary>
-        <p>Yes. Henko is MIT licensed, with no paid tier, no ads, no account and no telemetry.</p>
-      </details>
-      <details>
-        <summary>Does Henko upload my images?</summary>
-        <p>No. Image files are read from and written to your own disk. There is no upload path and no analytics.</p>
-      </details>
-      <details>
-        <summary>Which operating systems does it run on?</summary>
-        <p>macOS 11 or later as a universal build for Intel and Apple Silicon, Windows 10 and 11 as an <span class="mono">.msi</span> or <span class="mono">.exe</span> installer, and Linux x86_64 as an AppImage.</p>
-      </details>
-      <details>
-        <summary>Which image formats are supported?</summary>
-        <p>Open JPEG, PNG and WebP. Save as JPEG, PNG, WebP or AVIF.</p>
-      </details>
-      <details>
-        <summary>Can I resize and convert a whole folder at once?</summary>
-        <p>Yes. Add multiple images to the batch list, apply one setting to all of them, then export together with a filename pattern such as <code>{name}_{w}x{h}</code>.</p>
-      </details>
-      <details>
-        <summary>How is this different from an online image resizer?</summary>
-        <p>Nothing is uploaded, so there are no file size limits, no upload queue and no waiting for a server. It works offline, shows the compression result at full resolution before you save, and has no ads.</p>
-      </details>
+  <section class="section g2" id="tools" aria-labelledby="tools-h">
+    <div class="wrap">
+      <div class="group">
+        <div class="section-head section-head--row">
+          <div><h2 id="tools-h">What each image tool does</h2></div>
+          <a class="link" href="#upscale">See the upscale settings</a>
+        </div>
+        <div class="grid">
+          <article class="card card--row card--open span-6">
+            <h3>Crop to 1:1, 4:3 or 16:9</h3>
+            <p>Freeform or a fixed ratio, with a 90° turn and a flip either way.</p>
+            <div class="panel" role="img" aria-label="A crop box over a bamboo grove, with the ratio row set to 4:3">
+              <div class="crop" aria-hidden="true">
+                <img src="assets/bamboo.webp" srcset="assets/bamboo-700.webp 700w, assets/bamboo.webp 1200w" sizes="(max-width: 639px) 342px, 628px" alt="" width="1200" height="800" loading="lazy" decoding="async">
+                <span class="crop__box"></span>
+                <div class="crop__ratios"><span>Free</span><span>1:1</span><span class="is-on">4:3</span><span>16:9</span><span>9:16</span></div>
+              </div>
+            </div>
+          </article>
+          <article class="card card--row card--open span-6">
+            <h3>Resize an image by pixels</h3>
+            <p>Type a width and height with the ratio locked, or switch to a percentage. Fit, fill, stretch or none.</p>
+            <div class="panel" role="img" aria-label="The resize fields set to 1600 by 1067 pixels with the ratio locked, and the fit row">
+              <div class="hu" aria-hidden="true">
+                <div class="hu-bar"><b>Resize</b><span class="hu-sp hu-chip">Ratio locked</span></div>
+                <div class="hu-sec">
+                  <div class="flds">
+                    <div class="fld"><span>Width</span><b>1600<em>px</em></b></div>
+                    <div class="fld"><span>Height</span><b>1067<em>px</em></b></div>
+                  </div>
+                  <div class="hu-row"><span class="hu-chip is-on">Fit</span><span class="hu-chip">Fill</span><span class="hu-chip">Stretch</span><span class="hu-chip">None</span></div>
+                  <div class="hu-kv pct"><span>Percentage</span><span class="hu-num">100%</span></div>
+                  <div class="hu-trk pct" style="--v: 100%"><i></i><u></u></div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+      <div class="grid">
+        <article class="card card--row card--open span-6">
+          <h3>Compress an image to a size</h3>
+          <p>Set the quality from 1 to 100 and read the encoded size before you save.</p>
+          <div class="panel" role="img" aria-label="A compression result: the original at 33.2 kilobytes against 9.9 kilobytes at quality 62, 70 percent smaller">
+            <div class="hu" aria-hidden="true">
+              <div class="hu-bar"><b>Compress</b><span class="hu-sp hu-num">mountains.jpg</span></div>
+              <div class="hu-sec bars">
+                <div>
+                  <div class="hu-kv"><span>Original, WebP 92</span><b>33.2 kB</b></div>
+                  <div class="hu-trk" style="--v: 100%"><i style="background: color-mix(in oklab, #1e1b16 22%, transparent)"></i></div>
+                </div>
+                <div>
+                  <div class="hu-kv"><span>Quality 62</span><b>9.9 kB</b></div>
+                  <div class="hu-trk" style="--v: 30%"><i></i><u></u></div>
+                </div>
+                <div class="hu-kv"><span class="hu-chip is-on">70% smaller</span><span class="hu-chip">WebP</span><span class="hu-chip">2.4 MP</span></div>
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="card card--row card--open span-6">
+          <h3>Convert an image on export</h3>
+          <p>Open JPEG, PNG or WebP. Save JPEG, PNG, WebP or AVIF, one setting for the whole queue.</p>
+          <div class="panel" role="img" aria-label="The four output formats with the queue exporting JPEG files to WebP at 1600 pixels">
+            <div class="hu" aria-hidden="true">
+              <div class="hu-bar"><b>Convert</b><span class="hu-sp hu-num">JPEG → WebP</span></div>
+              <div class="hu-sec fmts">
+                <div><span>JPEG</span><span class="hu-sp">read</span></div>
+                <div><span>PNG</span><span class="hu-sp">read</span></div>
+                <div><span>WebP</span><span class="hu-sp">read · write</span></div>
+                <div><span>AVIF</span><span class="hu-sp">write</span></div>
+                <div><span class="hu-chip is-on">1600 px long side</span><span class="hu-chip">3 files</span></div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="upscale" aria-labelledby="upscale-h">
+    <div class="wrap">
+      <div class="grid grid--top fill">
+        <div class="span-5 split-col">
+          <h2 id="upscale-h">Upscale an image without AI</h2>
+          <p>Choose 1.5×, 2×, 3× or 4×, up to 16,384 px. Sharp uses Lanczos3 with an anti-ringing clamp, and Pixel is nearest-neighbour for sprites.</p>
+          <ul class="rows">
+            <li><span class="rows__name">Longest side</span><span class="rows__value">16,384 px</span></li>
+            <li><span class="rows__name">Artifact removal</span><span class="rows__value">0 to 100</span></li>
+            <li><span class="rows__name">Edge sharpening</span><span class="rows__value">0 to 100</span></li>
+          </ul>
+        </div>
+        <div class="panel ups span-6 start-7" role="img" aria-label="Henko's upscale controls: 2 times selected, Sharp with Lanczos3, artifact removal at 60 and edge-aware sharpening at 40, output 3200 by 2134">
+          <div class="hu" aria-hidden="true">
+            <div class="hu-bar"><b>Upscale</b><span class="hu-sp hu-num">1600 × 1067 → 3200 × 2134</span></div>
+            <div class="hu-sec">
+              <div class="hu-kv"><span class="hu-lbl">Factor</span><span class="hu-num">2×</span></div>
+              <div class="wk__chips"><span class="hu-chip">1.5×</span><span class="hu-chip is-on">2×</span><span class="hu-chip">3×</span><span class="hu-chip">4×</span></div>
+            </div>
+            <div class="hu-sec">
+              <div class="hu-kv"><span class="hu-lbl">Filter</span><span class="hu-num">Lanczos3</span></div>
+              <div class="hu-kv"><span>Clean · Catmull-Rom</span><span class="hu-num">soft</span></div>
+              <div class="hu-kv"><span><b>Sharp · Lanczos3</b></span><span class="hu-num">clamped</span></div>
+              <div class="hu-kv slim"><span>Pixel · nearest</span><span class="hu-num">sprites</span></div>
+            </div>
+            <div class="hu-sec ups__sliders">
+              <div class="hu-kv"><span>Artifact removal</span><span class="hu-num">60</span></div>
+              <div class="hu-trk" style="--v: 60%"><i></i><u></u></div>
+              <div class="hu-kv"><span>Edge sharpening</span><span class="hu-num">40</span></div>
+              <div class="hu-trk" style="--v: 40%"><i></i><u></u></div>
+            </div>
+            <div class="hu-sec slim">
+              <div class="hu-kv"><span class="hu-chip is-on">Upscale</span><span class="hu-num">3200 × 2134</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="offline" aria-labelledby="offline-h">
+    <div class="wrap">
+      <div class="section-head" data-moment="liquid-type" style="max-width:none">
+        <h2 id="offline-h" class="mo-lt__type">Your images stay on your disk.</h2>
+        <p>Henko reads the images you pick and writes the files you export. There is no upload path, no account and no telemetry, and the whole app is one MIT-licensed repository.</p>
+      </div>
+      <dl class="facts">
+        <div><dt>Uploads</dt><dd>None</dd></div>
+        <div><dt>Licence</dt><dd>MIT</dd></div>
+        <div><dt>Version</dt><dd>1.0.0</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section" id="export" aria-labelledby="export-h">
+    <div class="wrap">
+      <div class="grid grid--top fill">
+        <div class="span-5 split-col">
+          <h2 id="export-h">Queue images and export once</h2>
+          <p>Add as many files as you like, remove the ones you do not want and clear the rest in one click. Every file takes the same tool settings.</p>
+          <p class="t-small muted">The name pattern takes {name}, {w}, {h}, {format} and {date}.</p>
+        </div>
+        <div class="panel exp span-6 start-7" role="img" aria-label="The export panel with the name pattern mountain_{w}x{h}, the five tokens and a button for three files">
+          <div class="hu" aria-hidden="true">
+            <div class="hu-bar"><b>Export</b><span class="hu-sp hu-num">3 files</span></div>
+            <div class="hu-sec">
+              <div class="hu-kv"><span class="hu-lbl">Name pattern</span><span class="hu-num">.webp</span></div>
+              <div class="exp__pat">mountain_{w}x{h}<i></i></div>
+              <div class="wk__chips"><span class="hu-chip">{name}</span><span class="hu-chip">{w}</span><span class="hu-chip">{h}</span><span class="hu-chip">{format}</span><span class="hu-chip">{date}</span></div>
+            </div>
+            <div class="hu-sec">
+              <div class="hu-kv"><span>mountain_1600x1067.webp</span><span class="hu-num">WebP</span></div>
+              <div class="hu-kv"><span>lantern_1200x800.webp</span><span class="hu-num">WebP</span></div>
+              <div class="hu-kv"><span>bamboo_1200x800.webp</span><span class="hu-num">WebP</span></div>
+            </div>
+            <div class="hu-sec"><span class="hu-chip is-on">Export 3 files</span><span class="hu-note">Writes to the folder you choose</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="marq" data-moment="marquee-row" data-moment-opts='{"speed": 30, "gap": 20}'>
+        <ul class="mo-mq__track"><li>JPEG</li><li>PNG</li><li>WebP</li><li>AVIF</li><li>{name}</li><li>{w}</li><li>{h}</li><li>{format}</li><li>{date}</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="questions" aria-labelledby="questions-h">
+    <div class="wrap">
+      <div class="grid grid--top">
+        <div class="span-5 split-col">
+          <h2 id="questions-h">Questions</h2>
+          <p>Short answers to the five things people ask before they install it.</p>
+        </div>
+        <div class="faq span-6 start-7">
+          <div class="faq__item"><h3>Is Henko free?</h3><p>Yes. Henko is MIT licensed, so there is nothing to buy, no account to make and no ads in the window.</p></div>
+          <div class="faq__item"><h3>Does Henko upload my images?</h3><p>It reads and writes only the files you pick, and it sends nothing out: no upload, no analytics, no account.</p></div>
+          <div class="faq__item"><h3>Which systems run Henko?</h3><p>macOS 11 or later in one universal build, Windows 10 and 11 as an .msi or .exe, and Linux x86_64 as an AppImage.</p></div>
+          <div class="faq__item"><h3>Can Henko batch a whole folder?</h3><p>Add the files to the queue, set the tools once, then export them with a pattern such as {name}_{w}x{h}.</p></div>
+          <div class="faq__item faq__item--wide"><h3>What is Henko not for?</h3><p>Layers, masks and generative fill. Henko crops, resizes, upscales, compresses and converts; it does not retouch.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="download" aria-labelledby="download-h">
+    <div class="wrap">
+      <div class="grid grid--top fill">
+        <div class="span-5 split-col">
+          <h2 id="download-h">Installers for macOS, Windows and Linux</h2>
+          <p>Every link opens the latest release on GitHub, where the source and the issues are too.</p>
+          <ul class="rows">
+            <li><span class="rows__name">macOS</span><p>11 or later, Intel and Apple Silicon</p><span class="rows__value"><a class="link" data-release href="https://github.com/henrychea/henko-image/releases/latest">Get the .dmg</a></span></li>
+            <li><span class="rows__name">Windows</span><p>10 and 11, x64</p><span class="rows__value"><a class="link" data-release href="https://github.com/henrychea/henko-image/releases/latest">Get the installer</a></span></li>
+            <li><span class="rows__name">Linux</span><p>x86_64 desktop</p><span class="rows__value"><a class="link" data-release href="https://github.com/henrychea/henko-image/releases/latest">Get the AppImage</a></span></li>
+          </ul>
+        </div>
+        <div class="panel rel-panel span-6 start-7" role="img" aria-label="What release 1.0.0 adds: non-AI upscale to 4 times, a batch queue with name patterns, AVIF export and a universal macOS build">
+          <div class="hu" aria-hidden="true">
+            <div class="hu-bar"><b>1.0.0</b><span class="hu-chip is-on">latest</span><span class="hu-sp hu-num">MIT</span></div>
+            <div class="hu-sec rel">
+              <div><span>Non-AI upscale to 4×</span><span class="hu-sp hu-num">16,384 px</span></div>
+              <div><span>Batch queue and name patterns</span><span class="hu-sp hu-num">{name}</span></div>
+              <div><span>AVIF export</span><span class="hu-sp hu-num">4 formats</span></div>
+              <div><span>Universal macOS build</span><span class="hu-sp hu-num">Intel · ARM</span></div>
+            </div>
+            <div class="hu-sec"><span class="hu-chip">MIT licensed</span><span class="hu-note">Free, at github.com/henrychea</span></div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </main>
 
-<footer class="foot">
-  <p>Photos from Unsplash, used under the <a href="https://unsplash.com/license">Unsplash License</a>:
-    mountains by <a href="https://unsplash.com/photos/X0OoHrPvgXE">Luca Zanon</a>,
-    bamboo by <a href="https://unsplash.com/photos/buF62ewDLcQ">Jason Ortego</a>,
-    lantern by <a href="https://unsplash.com/photos/v7r8kZStqFw">mr.lee</a>.</p>
-  <p>Henko is <a href="https://github.com/henrychea/henko-image">MIT licensed</a>. Source, issues and releases are on GitHub.</p>
+<footer class="footer closing g2m" id="contact" aria-labelledby="close-h">
+  <div class="wrap">
+    <div class="closing__cta close--word">
+      <div class="section-head--split">
+        <div>
+          <h2 id="close-h">Download Henko 1.0.0</h2>
+          <p class="t-lead">Free and MIT licensed, for macOS, Windows and Linux.</p>
+        </div>
+        <a class="btn btn--primary" href="#download">Download Henko</a>
+      </div>
+      <p class="close__word" aria-hidden="true">Henko</p>
+    </div>
+    <div class="closing__links">
+      <div class="grid">
+        <div class="span-4 stack-4">
+          <a class="nav__logo" href="#top"><img src="assets/icon.png" alt="" width="24" height="24" loading="lazy" decoding="async">Henko</a>
+          <p class="footer__lede">An image editor that keeps your files on your disk.</p>
+        </div>
+        <div class="span-2 footer__col"><h3>Product</h3><ul><li><a href="#workspace">Workspace</a></li><li><a href="#tools">Tools</a></li><li><a href="#upscale">Upscale</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Export</h3><ul><li><a href="#export">Queue and pattern</a></li><li><a href="#questions">Questions</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Release</h3><ul><li><a href="#download">Download</a></li><li><a data-release href="https://github.com/henrychea/henko-image/releases/latest">Latest release</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Source</h3><ul><li><a href="https://github.com/henrychea/henko-image">GitHub repository</a></li><li><a href="https://opensource.org/license/mit">MIT license</a></li></ul></div>
+      </div>
+      <div class="footer__legal">
+        <span>© 2026 Henko</span>
+        <a class="credits" href="assets/CREDITS.md">Photographs via Unsplash</a>
+      </div>
+    </div>
+  </div>
 </footer>
 
+<script type="module" src="assets/system.js"></script>
+<script type="module" src="assets/motion/motion.js"></script>
+<script type="module" src="assets/layout/layout.js"></script>
+<script type="module" src="assets/moments/moments.js"></script>
 <script>
+// the release links: on GitHub Pages they resolve to this repository's latest release
 (function () {
   var host = location.hostname;
   if (/\.github\.io$/.test(host)) {
@@ -246,9 +716,63 @@
     var url = "https://github.com/" + owner + "/" + repo + "/releases/latest";
     document.querySelectorAll("[data-release]").forEach(function (a) { a.href = url; });
   }
-  var fig = document.getElementById("compare");
-  var input = document.getElementById("split");
-  input.addEventListener("input", function () { fig.style.setProperty("--split", input.value + "%"); });
+})();
+</script>
+<script>
+// the workspace demo: the split divider, the quality readout, the upscale factor, the queue's remove and clear
+(function () {
+  var fig = document.querySelector('.wk__fig');
+  var split = document.getElementById('wk-split');
+  if (fig && split) {
+    var setSplit = function () { fig.style.setProperty('--split', split.value + '%'); };
+    split.addEventListener('input', setSplit);
+    setSplit();
+  }
+  // the encoded size of the 1200 px preview at each quality (cwebp, the same source), in bytes
+  var sizes = { 20: 5986, 30: 6650, 40: 7568, 50: 8542, 62: 10100, 70: 11116, 80: 14974, 90: 32162, 100: 44002 };
+  var keys = Object.keys(sizes).map(Number);
+  var quality = document.getElementById('wk-quality');
+  var qOut = document.querySelector('[data-q-out]');
+  var qSize = document.querySelector('[data-q-size]');
+  if (quality && qOut && qSize) {
+    quality.addEventListener('input', function () {
+      var q = +quality.value, next = keys.filter(function (k) { return k >= q; })[0] || 100;
+      qOut.textContent = 'quality ' + q;
+      qSize.textContent = (sizes[next] / 1024).toFixed(1) + ' kB';
+    });
+  }
+  var factors = [1.5, 2, 3, 4], uOut = document.querySelector('[data-u-out]');
+  var chips = document.querySelectorAll('[data-factors] .hu-chip');
+  chips.forEach(function (chip, i) {
+    chip.addEventListener('click', function () {
+      chips.forEach(function (c) { c.classList.remove('is-on'); });
+      chip.classList.add('is-on');
+      if (uOut) uOut.textContent = Math.round(1600 * factors[i]) + ' × ' + Math.round(1067 * factors[i]);
+    });
+  });
+  var queue = document.querySelector('[data-queue]');
+  var count = document.querySelector('[data-queue-count]');
+  var empty = document.querySelector('[data-empty]');
+  var say = function () {
+    var rows = queue ? queue.querySelectorAll('.wk__file').length : 0;
+    if (count) count.textContent = rows === 1 ? '1 image' : rows + ' images';
+    if (empty) empty.hidden = rows > 0;
+  };
+  document.querySelectorAll('[data-remove]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var row = btn.closest('.wk__file');
+      if (row) row.remove();
+      say();
+      var first = queue && queue.querySelector('[data-remove]');
+      if (first) first.focus();
+    });
+  });
+  var clear = document.querySelector('[data-clear]');
+  if (clear) clear.addEventListener('click', function () {
+    if (queue) queue.querySelectorAll('.wk__file').forEach(function (row) { row.remove(); });
+    say();
+  });
+  say();
 })();
 </script>
 </body>

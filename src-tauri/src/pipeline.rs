@@ -8,6 +8,8 @@ use image::{
 };
 use serde::{Deserialize, Serialize};
 
+use crate::upscale::{self, Upscale};
+
 #[derive(Debug, Clone, Copy, Default, Deserialize)]
 pub struct Crop {
     pub x: f32,
@@ -71,6 +73,8 @@ pub struct Ops {
     pub rotate: u16,
     pub flip_h: bool,
     pub flip_v: bool,
+    #[serde(default)]
+    pub upscale: Option<Upscale>,
     pub resize: Option<Resize>,
 }
 
@@ -204,6 +208,10 @@ pub fn transform(image: DynamicImage, ops: &Ops) -> DynamicImage {
     }
     if ops.flip_v {
         image = image.flipv();
+    }
+
+    if let Some(upscale) = ops.upscale {
+        image = upscale::apply(&image, &upscale);
     }
 
     if let Some(resize) = ops.resize {
@@ -364,6 +372,7 @@ mod tests {
             rotate: 90,
             flip_h: true,
             flip_v: false,
+            upscale: None,
             resize: Some(Resize {
                 w: 5,
                 h: 10,
@@ -376,6 +385,29 @@ mod tests {
     fn crop_rotate_resize_dimensions() {
         let output = transform(sample(), &sample_ops());
         assert_eq!(output.dimensions(), (5, 10));
+    }
+
+    #[test]
+    fn upscale_runs_before_resize() {
+        let mut ops = sample_ops();
+        ops.resize = None;
+        ops.upscale = Some(Upscale {
+            scale: 2.0,
+            method: crate::upscale::UpscaleMethod::Clean,
+            denoise: 20,
+            sharpen: 10,
+        });
+        let output = transform(sample(), &ops);
+        assert_eq!(output.dimensions(), (20, 40));
+
+        let mut ordered = ops;
+        ordered.resize = Some(Resize {
+            w: 5,
+            h: 10,
+            fit: Fit::Stretch,
+        });
+        let resized = transform(sample(), &ordered);
+        assert_eq!(resized.dimensions(), (5, 10));
     }
 
     #[test]

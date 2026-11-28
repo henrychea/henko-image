@@ -1,4 +1,5 @@
 mod pipeline;
+mod upscale;
 
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicUsize, Ordering};

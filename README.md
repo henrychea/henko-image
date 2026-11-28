@@ -2,7 +2,7 @@
 
 **A free, open-source image resize tool, cropper, compressor and converter for macOS, Windows and Linux.** One window, live before/after preview, batch export. No ads, no account, no uploads.
 
-Henko (変更, "change") is a desktop image editor for the jobs you would otherwise open a browser tab for: resizing a photo for a listing, cropping a screenshot to 16:9, compressing a folder of JPEGs, or exporting PNGs as WebP. Everything runs on your own machine.
+Henko (変更, "change") is a desktop image editor for the jobs you would otherwise open a browser tab for: resizing a photo for a listing, cropping a screenshot to 16:9, upscaling a small image to print size, compressing a folder of JPEGs, or exporting PNGs as WebP. Everything runs on your own machine, and the upscaler runs locally with no model download and no cloud call.
 
 [releases]: https://github.com/henrychea/henko-image/releases/latest
 
@@ -12,20 +12,21 @@ Henko (変更, "change") is a desktop image editor for the jobs you would otherw
 
 | Platform | File | Size |
 | --- | --- | --- |
-| macOS 11+ (Intel and Apple Silicon) | [`Henko_0.1.0_universal.dmg`](https://github.com/henrychea/henko-image/releases/download/v0.1.0/Henko_0.1.0_universal.dmg) | 9.6 MB |
-| Windows 10/11 x64 | [`Henko_0.1.0_x64_en-US.msi`](https://github.com/henrychea/henko-image/releases/download/v0.1.0/Henko_0.1.0_x64_en-US.msi) | 5.2 MB |
-| Windows 10/11 x64 (alternative) | [`Henko_0.1.0_x64-setup.exe`](https://github.com/henrychea/henko-image/releases/download/v0.1.0/Henko_0.1.0_x64-setup.exe) | 3.4 MB |
-| Linux x86_64 | [`Henko_0.1.0_amd64.AppImage`](https://github.com/henrychea/henko-image/releases/download/v0.1.0/Henko_0.1.0_amd64.AppImage) | 85 MB |
+| macOS 11+ (Intel and Apple Silicon) | [`Henko_1.0.0_universal.dmg`](https://github.com/henrychea/henko-image/releases/download/v1.0.0/Henko_1.0.0_universal.dmg) | 9.6 MB |
+| Windows 10/11 x64 | [`Henko_1.0.0_x64_en-US.msi`](https://github.com/henrychea/henko-image/releases/download/v1.0.0/Henko_1.0.0_x64_en-US.msi) | 5.2 MB |
+| Windows 10/11 x64 (alternative) | [`Henko_1.0.0_x64-setup.exe`](https://github.com/henrychea/henko-image/releases/download/v1.0.0/Henko_1.0.0_x64-setup.exe) | 3.4 MB |
+| Linux x86_64 | [`Henko_1.0.0_amd64.AppImage`](https://github.com/henrychea/henko-image/releases/download/v1.0.0/Henko_1.0.0_amd64.AppImage) | 85 MB |
 
-The builds are not code signed yet. On macOS, right-click the app and choose **Open** the first time. On Windows, SmartScreen shows a warning; choose **More info → Run anyway**. On Linux, `chmod +x Henko_0.1.0_amd64.AppImage` before running it.
+The builds are not code signed yet. On macOS, right-click the app and choose **Open** the first time. On Windows, SmartScreen shows a warning; choose **More info → Run anyway**. On Linux, `chmod +x Henko_1.0.0_amd64.AppImage` before running it.
 
 ## What it does
 
 - **Crop:** drag a freeform frame, or lock it to 1:1, 4:3, 16:9 or 9:16. Rotate in 90° steps and flip horizontally or vertically.
 - **Resize:** type a pixel width and height with the aspect ratio locked, or set a percentage. Choose fit, fill, stretch or none.
+- **Upscale:** enlarge an image 1.5×, 2×, 3× or 4× with no AI model and no cloud call. Pick **Clean** (Catmull-Rom cubic), **Sharp** (Lanczos3 with an anti-ringing clamp) or **Pixel** (nearest neighbour for pixel art). Remove compression artifacts before the resize, sharpen edges after it, and judge the result in a live split preview against the original before you apply it.
 - **Compress:** set JPEG, WebP or AVIF quality from 1 to 100 and see the resulting file size next to the original before you save.
 - **Convert:** open JPEG, PNG and WebP; save as JPEG, PNG, WebP or AVIF.
-- **Batch:** queue as many images as you like, apply one set of settings to all of them, override any single image, then export the batch with a progress bar and a total-bytes-saved summary.
+- **Batch:** queue as many images as you like, apply one set of settings to all of them, override any single image, remove a single item from the queue or clear the whole queue, then export the batch with a progress bar and a total-bytes-saved summary.
 - **Name files your way:** export with a pattern such as `{name}_{w}x{h}` built from `{name}`, `{w}`, `{h}`, `{format}` and `{date}`.
 
 ## Why a local image tool instead of a website
@@ -94,7 +95,7 @@ Version lives in three files (`package.json`, `src-tauri/Cargo.toml`, `src-tauri
 
 ```bash
 pnpm release:tag            # refuses if the three disagree, creates v<version>
-git push origin v0.1.0      # triggers the release workflow
+git push origin v1.0.0      # triggers the release workflow
 ```
 
 `.github/workflows/release.yml` builds macOS (universal dmg), Windows (msi and NSIS exe) and Linux (AppImage) and attaches all four to one draft release. The landing page in `site/` deploys through `.github/workflows/pages.yml` to <https://henrychea.github.io/henko-image/>.

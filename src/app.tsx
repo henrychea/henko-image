@@ -103,8 +103,8 @@ function Empty() {
         <div class="t-display">変更</div>
         <div class="t-caps mt-2 text-muted">Change your images</div>
         <p class="t-body mt-4 max-w-[400px] text-muted">
-          Crop, resize, compress and convert images into the size and format you need, entirely
-          on this machine.
+          Crop, resize, upscale, compress and convert images into the size and format you need,
+          entirely on this machine.
         </p>
 
         <div

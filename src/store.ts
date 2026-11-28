@@ -12,9 +12,12 @@ import type {
   Resize,
   Settings,
   Tool,
+  Upscale,
 } from "./types";
 
 const SETTINGS_KEY = "henko.settings";
+export const MAX_UPSCALE_DIM = 16384;
+export const defaultUpscale: Upscale = { scale: 2, method: "clean", denoise: 35, sharpen: 25 };
 
 const defaults: Settings = {
   theme: "system",
@@ -121,10 +124,24 @@ export function resizeDims(base: { w: number; h: number }, resize: Resize) {
   return { w: Math.max(1, w), h: Math.max(1, h) };
 }
 
+export function upscaleDims(base: { w: number; h: number }, scale: number) {
+  const factor = Number.isFinite(scale) ? Math.min(4, Math.max(1, scale)) : 1;
+  let w = Math.max(1, Math.round(base.w * factor));
+  let h = Math.max(1, Math.round(base.h * factor));
+  const longest = Math.max(w, h);
+  if (longest > MAX_UPSCALE_DIM) {
+    const ratio = MAX_UPSCALE_DIM / longest;
+    w = Math.max(1, Math.round(w * ratio));
+    h = Math.max(1, Math.round(h * ratio));
+  }
+  return { w, h };
+}
+
 export function outDims(item: Item) {
   const base = baseDims(item);
-  if (!item.ops.resize) return base;
-  return resizeDims(base, item.ops.resize);
+  const scaled = item.ops.upscale ? upscaleDims(base, item.ops.upscale.scale) : base;
+  if (!item.ops.resize) return scaled;
+  return resizeDims(scaled, item.ops.resize);
 }
 
 export const compressOps: Ops = {
@@ -132,6 +149,7 @@ export const compressOps: Ops = {
   rotate: 0,
   flipH: false,
   flipV: false,
+  upscale: null,
   resize: null,
 };
 
@@ -141,6 +159,19 @@ export function previewKey(item: Item) {
 
 export function previewFor(item: Item) {
   return item.preview?.key === previewKey(item) ? item.preview : null;
+}
+
+export function upscalePreviewKey(item: Item) {
+  const upscale = app.draft?.id === item.id ? app.draft.upscale : item.ops.upscale;
+  if (!upscale) return null;
+  const denoise = upscale.method === "pixel" ? 0 : upscale.denoise;
+  const sharpen = upscale.method === "pixel" ? 0 : upscale.sharpen;
+  return `${item.id}|${upscale.scale}|${upscale.method}|${denoise}|${sharpen}`;
+}
+
+export function upscalePreviewFor(item: Item) {
+  const key = upscalePreviewKey(item);
+  return key !== null && item.upscalePreview?.key === key ? item.upscalePreview : null;
 }
 
 export function extOf(format: Fmt) {
@@ -172,6 +203,14 @@ export function opsPayload(ops: Ops): Ops {
     rotate: ops.rotate,
     flipH: ops.flipH,
     flipV: ops.flipV,
+    upscale: ops.upscale
+      ? {
+          scale: ops.upscale.scale,
+          method: ops.upscale.method,
+          denoise: ops.upscale.denoise,
+          sharpen: ops.upscale.sharpen,
+        }
+      : null,
     resize: ops.resize ? { w: ops.resize.w, h: ops.resize.h, fit: ops.resize.fit } : null,
   };
 }
@@ -192,6 +231,7 @@ function makeDraft(item: Item, fit: Fit): Draft {
     crop: item.ops.crop ? { ...item.ops.crop } : { x: 0, y: 0, w: 1, h: 1 },
     aspect: null,
     resize: item.ops.resize ? { ...item.ops.resize } : { w: base.w, h: base.h, fit },
+    upscale: item.ops.upscale ? { ...item.ops.upscale } : { ...defaultUpscale },
   };
 }
 
@@ -200,6 +240,35 @@ export function selectItem(id: string) {
     s.selected = id;
     const item = s.items.find((i) => i.id === id);
     s.draft = item ? makeDraft(item, s.settings.defaultFit) : null;
+  });
+}
+
+export function removeItem(id: string) {
+  if (app.export) return;
+  setApp((s) => {
+    const index = s.items.findIndex((i) => i.id === id);
+    if (index < 0) return;
+    s.items.splice(index, 1);
+    if (s.selected !== id) return;
+    const next = s.items[Math.min(index, s.items.length - 1)];
+    if (!next) {
+      s.selected = null;
+      s.draft = null;
+      s.sheetOpen = false;
+      return;
+    }
+    s.selected = next.id;
+    s.draft = makeDraft(next, s.settings.defaultFit);
+  });
+}
+
+export function clearItems() {
+  if (app.export) return;
+  setApp((s) => {
+    s.items = [];
+    s.selected = null;
+    s.draft = null;
+    s.sheetOpen = false;
   });
 }
 
@@ -266,12 +335,13 @@ export async function addPaths(paths: string[]) {
         srcFormat: probe.format,
         url: convertFileSrc(path),
         meta: probe.meta,
-        ops: { crop: null, rotate: 0, flipH: false, flipV: false, resize: null },
+        ops: { crop: null, rotate: 0, flipH: false, flipV: false, upscale: null, resize: null },
         quality: app.settings.defaultQuality,
         target: app.settings.defaultFormat,
         strip: app.settings.stripByDefault,
         status: "ready",
         preview: null,
+        upscalePreview: null,
         outBytes: probe.bytes,
       };
       setApp((s) => {
@@ -367,6 +437,49 @@ export function setDraftResize(resize: Partial<{ w: number; h: number; fit: Fit 
     if (resize.h !== undefined) s.draft.resize.h = resize.h;
     if (resize.fit !== undefined) s.draft.resize.fit = resize.fit;
   });
+}
+
+export function setDraftUpscale(upscale: Partial<Upscale>) {
+  setApp((s) => {
+    if (!s.draft) return;
+    if (upscale.scale !== undefined) s.draft.upscale.scale = upscale.scale;
+    if (upscale.method !== undefined) s.draft.upscale.method = upscale.method;
+    if (upscale.denoise !== undefined) s.draft.upscale.denoise = upscale.denoise;
+    if (upscale.sharpen !== undefined) s.draft.upscale.sharpen = upscale.sharpen;
+  });
+}
+
+export function applyUpscale() {
+  const item = current();
+  if (!item || !app.draft) return;
+  patchItem(item.id, (it) => {
+    const draft = app.draft!.upscale;
+    const pure = draft.method === "pixel";
+    it.ops.upscale = {
+      scale: draft.scale,
+      method: draft.method,
+      denoise: pure ? 0 : draft.denoise,
+      sharpen: pure ? 0 : draft.sharpen,
+    };
+    it.status = "editing";
+  });
+  toast("Upscale applied");
+}
+
+export function resetUpscale() {
+  const item = current();
+  if (!item) return;
+  patchItem(item.id, (it) => {
+    it.ops.upscale = null;
+    const untouched =
+      it.ops.crop === null &&
+      it.ops.rotate === 0 &&
+      !it.ops.flipH &&
+      !it.ops.flipV &&
+      it.ops.resize === null;
+    it.status = untouched ? "ready" : "editing";
+  });
+  toast("Upscale reset");
 }
 
 export function applyResize() {

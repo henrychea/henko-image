@@ -1,17 +1,20 @@
-export type Tool = "crop" | "resize" | "compress" | "format";
+export type Tool = "crop" | "resize" | "upscale" | "compress" | "format";
 export type Fmt = "jpeg" | "png" | "webp" | "avif";
 export type Fit = "fit" | "fill" | "stretch" | "none";
+export type UpscaleMethod = "clean" | "sharp" | "pixel";
 export type Theme = "light" | "dark" | "system";
 export type Status = "ready" | "editing" | "queued" | "done";
 
 export type Crop = { x: number; y: number; w: number; h: number };
 export type Resize = { w: number; h: number; fit: Fit };
+export type Upscale = { scale: number; method: UpscaleMethod; denoise: number; sharpen: number };
 
 export type Ops = {
   crop: Crop | null;
   rotate: number;
   flipH: boolean;
   flipV: boolean;
+  upscale: Upscale | null;
   resize: Resize | null;
 };
 
@@ -41,6 +44,7 @@ export type Item = {
   strip: boolean;
   status: Status;
   preview: Preview | null;
+  upscalePreview: Preview | null;
   outBytes: number;
 };
 
@@ -81,4 +85,10 @@ export type Progress = {
   bytesOut: number;
 };
 
-export type Draft = { id: string; crop: Crop; aspect: number | null; resize: Resize };
+export type Draft = {
+  id: string;
+  crop: Crop;
+  aspect: number | null;
+  resize: Resize;
+  upscale: Upscale;
+};

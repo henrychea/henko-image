@@ -10,6 +10,8 @@ import {
   previewKey,
   setDraftCrop,
   toast,
+  upscalePreviewFor,
+  upscalePreviewKey,
 } from "./store";
 import { formatBytes } from "./ui";
 
@@ -167,7 +169,13 @@ function CropOverlay(props: {
   );
 }
 
-function SplitView(props: { item: Item; display: Size }) {
+function SplitView(props: {
+  item: Item;
+  display: Size;
+  left: string;
+  right: string;
+  rightUrl: string;
+}) {
   const [split, setSplit] = createSignal(50);
   let frame: HTMLElement | undefined;
 
@@ -186,7 +194,7 @@ function SplitView(props: { item: Item; display: Size }) {
     window.addEventListener("pointerup", up);
   };
 
-  const previewUrl = () => props.item.preview?.url ?? props.item.url;
+  const previewUrl = () => props.rightUrl;
 
   return (
     <div class="bg-washi p-4 ring-1 ring-rule">
@@ -211,10 +219,10 @@ function SplitView(props: { item: Item; display: Size }) {
           />
         </div>
         <div class="t-mono absolute top-1.5 left-1.5 max-w-[48%] truncate rounded-sm bg-surface/90 px-1.5 py-0.5 text-[10px] text-ink">
-          Original · {formatBytes(props.item.bytes)}
+          {props.left}
         </div>
         <div class="t-mono absolute top-1.5 right-1.5 max-w-[48%] truncate rounded-sm bg-surface/90 px-1.5 py-0.5 text-[10px] text-ai">
-          Compressed · {props.item.preview ? formatBytes(props.item.preview.bytes) : "—"}
+          {props.right}
         </div>
         <div class="absolute inset-y-0" style={{ left: `${split()}%` }}>
           <div class="absolute inset-y-0 -left-px w-0.5 bg-shu" />
@@ -294,6 +302,73 @@ export function Canvas() {
     },
   );
 
+  createEffect(
+    () => {
+      const it = item();
+      const draft = app.draft;
+      if (!it || app.tool !== "upscale" || !draft || draft.id !== it.id) return null;
+      const key = upscalePreviewKey(it);
+      if (!key || it.upscalePreview?.key === key) return null;
+      const method = draft.upscale.method;
+      return {
+        id: it.id,
+        key,
+        path: it.path,
+        ops: {
+          ...compressOps,
+          upscale: {
+            scale: draft.upscale.scale,
+            method,
+            denoise: method === "pixel" ? 0 : draft.upscale.denoise,
+            sharpen: method === "pixel" ? 0 : draft.upscale.sharpen,
+          },
+        },
+        quality: 92,
+        format: "webp" as const,
+      };
+    },
+    (request) => {
+      if (!request) return;
+      const timer = window.setTimeout(() => {
+        invoke<{ bytesLen: number; data: string }>("preview", {
+          path: request.path,
+          ops: request.ops,
+          quality: request.quality,
+          format: request.format,
+        })
+          .then((result) => {
+            patchItem(request.id, (it) => {
+              it.upscalePreview = {
+                key: request.key,
+                bytes: result.bytesLen,
+                url: `data:${mimeOf(request.format)};base64,${result.data}`,
+              };
+            });
+          })
+          .catch((err) => toast(`Upscale preview failed: ${String(err)}`, true));
+      }, 350);
+      return () => window.clearTimeout(timer);
+    },
+  );
+
+  const splitLeft = (it: Item) =>
+    app.tool === "upscale"
+      ? `Original · ${it.w} × ${it.h}`
+      : `Original · ${formatBytes(it.bytes)}`;
+
+  const splitRight = (it: Item) => {
+    if (app.tool !== "upscale") {
+      return `Compressed · ${it.preview ? formatBytes(it.preview.bytes) : "—"}`;
+    }
+    const scale = app.draft?.upscale.scale ?? 2;
+    return upscalePreviewFor(it) ? `Upscaled · ${scale}×` : "Upscaled · Rendering…";
+  };
+
+  const splitUrl = (it: Item) => {
+    if (app.tool === "upscale") return upscalePreviewFor(it)?.url ?? it.url;
+    return it.preview?.url ?? it.url;
+  };
+
   return (
     <main
       ref={(el) => (paneEl = el)}
@@ -303,7 +378,7 @@ export function Canvas() {
         {(it) => (
           <div class="absolute inset-0 flex items-center justify-center p-6">
             <Show
-              when={app.tool === "compress"}
+              when={app.tool === "compress" || app.tool === "upscale"}
               fallback={
                 <div
                   class="relative bg-washi p-6 shadow-[0_1px_2px_rgba(30,27,22,0.06)] ring-1 ring-rule"
@@ -331,7 +406,13 @@ export function Canvas() {
                 </div>
               }
             >
-              <SplitView item={it()} display={display()} />
+              <SplitView
+                item={it()}
+                display={display()}
+                left={splitLeft(it())}
+                right={splitRight(it())}
+                rightUrl={splitUrl(it())}
+              />
             </Show>
           </div>
         )}

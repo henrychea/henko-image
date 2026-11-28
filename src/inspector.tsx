@@ -1,24 +1,29 @@
 import { createMemo, Show } from "solid-js";
-import type { Fit, Fmt } from "./types";
+import type { Fit, Fmt, Upscale as UpscaleSettings, UpscaleMethod } from "./types";
 import {
   app,
   applyCrop,
   applyResize,
+  applyUpscale,
   baseDims,
   current,
+  defaultUpscale,
   markApplied,
   previewFor,
   resizeDims,
   resetCrop,
+  resetUpscale,
   rotateBy,
   setAspect,
   setDraftResize,
+  setDraftUpscale,
   setQuality,
   setStrip,
   setTarget,
   setTool,
   toggleLock,
   toggleFlip,
+  upscaleDims,
 } from "./store";
 import { formatBytes, Icon, Segmented, Slider, Switch } from "./ui";
 
@@ -43,6 +48,25 @@ const aspects: Record<string, string> = {
   "1.3333333333333333": "4:3",
   "1.7777777777777777": "16:9",
   "0.5625": "9:16",
+};
+
+const scaleOptions = [
+  { value: "1.5", label: "1.5×" },
+  { value: "2", label: "2×" },
+  { value: "3", label: "3×" },
+  { value: "4", label: "4×" },
+];
+
+const methodOptions: { value: UpscaleMethod; label: string }[] = [
+  { value: "clean", label: "Clean" },
+  { value: "sharp", label: "Sharp" },
+  { value: "pixel", label: "Pixel" },
+];
+
+const methodHint: Record<UpscaleMethod, string> = {
+  clean: "Catmull-Rom cubic: smooth tones, low ringing.",
+  sharp: "Lanczos3 with anti-ring clamp: crisp edges, no halos.",
+  pixel: "Nearest neighbour: hard pixels for pixel art and sprites.",
 };
 
 function CropPanel() {
@@ -437,21 +461,140 @@ function FormatPanel() {
   );
 }
 
+function UpscalePanel() {
+  const item = createMemo(() => current());
+  const draft = (): UpscaleSettings => app.draft?.upscale ?? defaultUpscale;
+  const result = () => {
+    const it = item();
+    if (!it) return { w: 0, h: 0 };
+    return upscaleDims(baseDims(it), draft().scale);
+  };
+  const applied = () => item() !== null && item()!.ops.upscale !== null;
+
+  const setDenoise = (value: number) =>
+    setDraftUpscale({ denoise: Math.min(100, Math.max(0, Math.round(value) || 0)) });
+  const setSharpen = (value: number) =>
+    setDraftUpscale({ sharpen: Math.min(100, Math.max(0, Math.round(value) || 0)) });
+
+  return (
+    <Show when={item()}>
+      {(it) => (
+        <div class="card motion-down">
+          <div class="t-caps mb-2 text-muted">Scale</div>
+          <Segmented
+            value={String(draft().scale)}
+            options={scaleOptions}
+            label="Upscale factor"
+            onChange={(value) => setDraftUpscale({ scale: Number(value) })}
+            class="w-full"
+          />
+
+          <div class="t-caps mt-4 mb-2 text-muted">Method</div>
+          <Segmented
+            value={draft().method}
+            options={methodOptions}
+            label="Upscale method"
+            onChange={(value) => setDraftUpscale({ method: value })}
+            class="w-full"
+          />
+          <div class="t-sm mt-1 mb-3 text-muted">{methodHint[draft().method]}</div>
+
+          <Show when={draft().method !== "pixel"}>
+            <div class="flex items-center justify-between">
+              <span class="t-caps text-muted">Remove artifacts</span>
+              <input
+                class="field w-16 text-right"
+                type="number"
+                min="0"
+                max="100"
+                value={draft().denoise}
+                aria-label="Remove artifacts"
+                onChange={(event) => setDenoise(Number(event.currentTarget.value))}
+              />
+            </div>
+            <div class="mt-2">
+              <Slider
+                min={0}
+                max={100}
+                value={draft().denoise}
+                label="Remove artifacts"
+                onInput={setDenoise}
+              />
+            </div>
+
+            <div class="mt-3 flex items-center justify-between">
+              <span class="t-caps text-muted">Sharpen</span>
+              <input
+                class="field w-16 text-right"
+                type="number"
+                min="0"
+                max="100"
+                value={draft().sharpen}
+                aria-label="Sharpen"
+                onChange={(event) => setSharpen(Number(event.currentTarget.value))}
+              />
+            </div>
+            <div class="mt-2">
+              <Slider
+                min={0}
+                max={100}
+                value={draft().sharpen}
+                label="Sharpen"
+                onInput={setSharpen}
+              />
+            </div>
+          </Show>
+
+          <div class="mt-4 border-t border-rule pt-3">
+            <div class="flex items-center justify-between py-1">
+              <span class="t-sm text-muted">Output size</span>
+              <span class="t-mono">
+                {result().w} × {result().h} px
+              </span>
+            </div>
+            <div class="flex items-center justify-between py-1">
+              <span class="t-sm text-muted">Status</span>
+              <span class={["t-mono", applied() ? "text-matcha" : "text-muted"]}>
+                {applied() ? "Applied" : "Not applied"}
+              </span>
+            </div>
+          </div>
+
+          <div class="mt-4 flex items-center justify-between">
+            <button
+              type="button"
+              class="btn btn-ghost"
+              disabled={it().ops.upscale === null}
+              onClick={resetUpscale}
+            >
+              Reset
+            </button>
+            <button type="button" class="btn btn-primary" onClick={applyUpscale}>
+              Apply upscale
+            </button>
+          </div>
+        </div>
+      )}
+    </Show>
+  );
+}
+
 export function Inspector() {
   return (
-    <aside class="flex w-80 shrink-0 flex-col overflow-y-auto border-l border-rule bg-surface">
+    <aside class="flex w-[348px] shrink-0 flex-col overflow-y-auto border-l border-rule bg-surface">
       <div class="p-4">
         <Segmented
           value={app.tool}
           options={[
             { value: "crop", label: "Crop" },
             { value: "resize", label: "Resize" },
+            { value: "upscale", label: "Upscale" },
             { value: "compress", label: "Compress" },
             { value: "format", label: "Format" },
           ]}
           label="Tool"
           onChange={setTool}
-          class="w-full"
+          class="w-full seg-compact"
         />
       </div>
       <div class="px-4 pb-4">
@@ -460,6 +603,9 @@ export function Inspector() {
         </Show>
         <Show when={app.tool === "resize"}>
           <ResizePanel />
+        </Show>
+        <Show when={app.tool === "upscale"}>
+          <UpscalePanel />
         </Show>
         <Show when={app.tool === "compress"}>
           <CompressPanel />
